@@ -1,0 +1,43 @@
+
+## 
+## Environment
+##
+
+export PATH=~/bin:~/svn/main/tools:~/Applications/MacVim/Contents/MacOS:/usr/local/bin:/usr/local/sbin:/opt/local/bin:/usr/local/mysql/bin:$PATH
+export COLORTERM=1 
+export P4PORT=localhost:1666
+export P4CLIENT=ken-eleven
+export P4EDITOR=vim
+export EDITOR=vim
+export PS1='\h \w `git branch 2> /dev/null | grep -e ^* | sed -E  s/^\\\\\*\ \(.+\)$/\(\\\\\1\)\ /`$ '
+export GREP_OPTIONS="--color=auto"
+
+export RUBYROOT=/opt/local/lib/ruby
+
+# Load development helpers
+. ~/svn/users/ken/bash_helper.sh
+. ~/.config/bash/git-completion.bash
+
+export BRANCH=trunk
+
+alias vim=vi
+alias ls="ls -CFG"
+alias gvim="mvim"
+alias ovim="mvim --remote-tab"
+alias kicksilver="killall Quicksilver && open -a Quicksilver"
+alias vibp="gvim ~/.bash_profile"
+alias cap="cap -f ~/svn/capistrano/Capfile"
+
+alias killmergeinfo="svn propget -R svn:mergeinfo * | field 1 | xargs svn propdel svn:mergeinfo"
+
+function trash () {
+	mv $* ~/.Trash
+}
+
+alias stts="svn status | egrep -v '^(X|Performing)' | uniq"
+
+function switch() {
+	svn switch $SVNROOT/main/$1
+}
+
+	
