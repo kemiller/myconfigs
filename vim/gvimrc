@@ -1,0 +1,36 @@
+"
+"winpos 60 45
+"set lines=62 columns=120
+
+" set nomacatsui
+set encoding=utf-8
+"set termencoding=macroman
+"set guifont=Lucida_Sans_Typewriter_Regular:h18
+"set guifont=Bitstream_Vera_Sans_Mono:h18
+set guifont=Consolas:h16
+set transparency=5
+
+set hlsearch
+set guioptions-=T
+set guioptions+=c
+"colorscheme inkpot
+"colorscheme midnight2
+"colorscheme vividchalk
+colorscheme delek
+set antialias
+
+set noshowcmd " this causes performance problems
+
+" nmap _SF :set guifont=vt100:h10:cANSI<CR>
+" nmap _MF :set guifont=Lucida_Console:h11:cANSI<CR>
+" nmap _LF :set guifont=Lucida_Console:h13:cANSI<CR>
+" nmap <M-m> :simalt ~x<CR>
+nmap <silent> <D-Z> :set lines=62 columns=185<CR>
+nmap <silent> <M-D-µ> :set lines=62 columns=120<CR>
+
+" Force this to work, even with rails plugin
+nmap <silent> <D-{> :tabp<CR>
+nmap <silent> <D-}> :tabn<CR>
+nmap <silent> <D-w> :confirm close<CR>
+
+
