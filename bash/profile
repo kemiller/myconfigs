@@ -5,9 +5,6 @@
 
 export PATH=~/bin:~/svn/main/tools:~/Applications/MacVim/Contents/MacOS:/usr/local/bin:/usr/local/sbin:/opt/local/bin:/usr/local/mysql/bin:$PATH
 export COLORTERM=1 
-export P4PORT=localhost:1666
-export P4CLIENT=ken-eleven
-export P4EDITOR=vim
 export EDITOR=vim
 export GREP_OPTIONS="--color=auto"
 
