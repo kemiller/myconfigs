@@ -13,7 +13,7 @@ export RUBYROOT=/opt/local/lib/ruby
 # Load development helpers
 . ~/svn/users/ken/bash_helper.sh
 . ~/.config/bash/git-completion.bash
-export PS1='\h \w $(__git_ps1 "(%s)")$ '
+export PS1='\h \w $(__git_ps1 "(%s) ")$ '
 
 export BRANCH=trunk
 
