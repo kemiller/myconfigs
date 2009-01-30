@@ -9,7 +9,6 @@ export P4PORT=localhost:1666
 export P4CLIENT=ken-eleven
 export P4EDITOR=vim
 export EDITOR=vim
-export PS1='\h \w `git branch 2> /dev/null | grep -e ^* | sed -E  s/^\\\\\*\ \(.+\)$/\(\\\\\1\)\ /`$ '
 export GREP_OPTIONS="--color=auto"
 
 export RUBYROOT=/opt/local/lib/ruby
@@ -17,6 +16,7 @@ export RUBYROOT=/opt/local/lib/ruby
 # Load development helpers
 . ~/svn/users/ken/bash_helper.sh
 . ~/.config/bash/git-completion.bash
+export PS1='\h \w $(__git_ps1 "(%s)")$ '
 
 export BRANCH=trunk
 
