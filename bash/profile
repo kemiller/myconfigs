@@ -12,8 +12,13 @@ export RUBYROOT=/opt/local/lib/ruby
 
 # Load development helpers
 . ~/svn/users/ken/bash_helper.sh
+
+# Git stuff
 . ~/.config/bash/git-completion.bash
 export PS1='\h \w $(__git_ps1 "(%s) ")$ '
+alias gsr='git svn rebase'
+alias gsf='git svn fetch'
+alias gsd='git svn dcommit'
 
 export BRANCH=trunk
 
