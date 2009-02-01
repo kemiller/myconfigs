@@ -52,6 +52,12 @@ NAMES = [
 HL = HighLine.new
 
 def main(files)
+
+	if files.size <= 0
+		puts "No files specified!"
+		exit 1
+	end
+
 	mapping = {}
 	misses = []
 
@@ -62,6 +68,11 @@ def main(files)
 		else
 			misses << file 
 		end
+	end
+
+	if mapping.size <= 0
+		puts "No files were recognized."
+		exit 1
 	end
 
 	print_list(mapping)
