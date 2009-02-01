@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby 
+
+while line = $stdin.gets
+	puts line.split[ARGV[0].to_i-1]
+end
+
+

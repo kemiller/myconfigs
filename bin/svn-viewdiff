@@ -1,0 +1,120 @@
+#!/bin/sh
+
+#
+# If we're not in the OS X Terminal, we probably can't run FileMerge
+#
+if [ "${TERM_PROGRAM:=}" != "Apple_Terminal" ]; then
+    diff "$@";
+    exit $?;
+fi;
+
+##
+# Handle command line
+##
+
+usage ()
+{
+  program=$(basename "$0");
+
+  if [ $# != 0 ]; then echo "$@"; echo ""; fi;
+
+  echo "${program}: usage:";
+  echo "    ${program} [-options] file1 file2";
+  echo "";
+  echo "options:";
+  echo "  --help                     Print this help";
+  echo "  -c                         Ignored";
+  echo "  -C --context X             Ignored";
+  echo "  -u                         Ignored";
+  echo "  -U --unified X             Ignored";
+  echo "  -L --label X               Ignored";
+ #echo "  -p --show-c-function       Ignored";
+ #echo "  -F --show-function-line X  Ignored";
+  echo "  -q --brief                 Ignored";
+  echo "  -y --side-by-side          Ignored";
+  echo "  -w --width X               Ignored";
+ #echo "  --left-column              Ignored";
+ #echo "  --suppress-common-lines    Ignored";
+  echo "  -l --paginate              Ignored";
+  echo "  -t --expand-tabs           Ignored";
+  echo "  -T --initial-tab           Ignored";
+ #echo "  -r --recursive             Ignored";
+  echo "  -d --minimal               Ignored";
+  echo "  -H --speed-large-files     Ignored";
+}
+
+# Process arguments
+while [ $# != 0 ]; do
+  case $1 in
+    --help)
+      usage;
+      exit 0;
+      ;;
+
+    # These display options would not make sense for FileMerge
+    -c                     ) shift 1; ;; # Context diff
+    -C|--context           ) shift 2; ;; # Context diff
+    -u                     ) shift 1; ;; # Unified diff
+    -U|--unified           ) shift 2; ;; # Unified diff
+    -L|--label             ) shift 2; ;; #   Label
+   #-p|--show-c-function   ) shift 1; ;; #   C function names
+   #-F|--show-function-line) shift 2; ;; #   Show recent line w/ regex
+    -q|--brief             ) shift 1; ;; # Output only whether files differ
+    -y|--side-by-side      ) shift 1; ;; # Output in two columns
+    -w|--width             ) shift 2; ;; #   Max chars per line
+   #--left-column          ) shift 1; ;; #   Left only if common
+   #--suppress-common-lines) shift 1; ;; #   No output if common
+    -l|--paginate          ) shift 1; ;; # Pass through pr
+    -t|--expand-tabs       ) shift 1; ;; # Expand tabs
+    -T|--initial-tab       ) shift 1; ;; # Add initial tab
+   #-r|--recursive         ) shift 1; ;; # Recurse into directories
+    -d|--minimal           ) shift 1; ;; # Try hard to minimize changes
+    -H|--speed-large-files ) shift 1; ;; # Assume large files and small changes
+
+    # Implement these
+    #-s  --report-identical-files
+
+    --|*) break; ;;
+  esac;
+done;
+
+if [ $# != 2 ]; then
+    usage "Invalid arguments: $*";
+    exit 1;
+fi;
+
+file1="$1"; shift;
+file2="$1"; shift;
+
+##
+# Do The Right Thing
+##
+
+merge="${file2}";
+
+tmp="";
+
+if [ $(dirname "${file1}") == "/tmp" ]; then
+    if [ -z "${tmp}" ]; then tmp=$(mktemp -d /tmp/viewdiff.XXXX); fi;
+
+    ln "${file1}" "${tmp}/left";
+    file1="${tmp}/left";
+fi;
+
+if [ $(dirname "${file2}") == "/tmp" ]; then
+    if [ -z "${tmp}" ]; then tmp=$(mktemp -d /tmp/viewdiff.XXXX); fi;
+
+    ln "${file2}" "${tmp}/right";
+    file2="${tmp}/right";
+    merge="";
+fi;
+
+echo opendiff "${file1}" "${file2}";
+if [ -z "${merge}" ]; then
+    opendiff "${file1}" "${file2}";
+else
+    opendiff "${file1}" "${file2}" -merge "${merge}";
+fi;
+
+# Clean up
+if [ -n "${tmp}" ]; then (sleep 4; rm -rf "${tmp}") & fi;

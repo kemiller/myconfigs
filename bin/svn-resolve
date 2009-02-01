@@ -1,0 +1,61 @@
+#!/bin/sh
+
+##
+# Wilfredo Sanchez
+# Resolve Subversion conflicts using FileMerge.
+# $Id$
+##
+# Copyright (c) 2002 Wilfredo Sanchez Vega, wsanchez@mit.edu.
+# All rights reserved.
+#
+# Permission to use, copy, modify, and distribute this software for
+# any purpose with or without fee is hereby granted, provided that the
+# above copyright notice, this permission, and the following
+# disclaimer notice appear in all copies.
+#
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL
+# WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE
+# AUTHORS BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
+# CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+# OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+# NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
+# WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+##
+
+set -e
+set -u
+
+resolve ()
+{
+    local conflict="$1";
+
+    local revision=$(svn info "${conflict}" | grep '^Revision: ' | sed 's|^Revision: ||');
+
+    local     left="${conflict}.mine";
+    local    right="${conflict}.r${revision}";
+    local ancestor="";
+
+    for file in $(ls "${conflict}".r*); do
+        if [ "${file}" != "${right}" ]; then
+            if [ -n "${ancestor}" ]; then
+                echo "ERROR: Multiple possible ancestor files exist for file: ${conflict}";
+                return 1;
+            fi;
+            ancestor="${file}";
+        fi;
+    done;
+
+    for file in "${left}" "${right}" "${ancestor}"; do
+        if [ ! -f "${file}" ]; then
+            echo "ERROR: Missing file: ${file}";
+            return 1;
+        fi;
+    done;
+
+    opendiff "${left}" "${right}" -ancestor "${ancestor}" -merge "${conflict}";
+}
+
+for conflict in $(svn status . | grep '^C' | sed 's|^C......||'); do
+    resolve "${conflict}";
+done;

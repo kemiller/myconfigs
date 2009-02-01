@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wc-entries
+   xmlns="svn:">
+<entry
+   committed-rev="1887"
+   name=""
+   committed-date="2005-08-09T12:34:16.383745Z"
+   url="http://ssel.vub.ac.be/svn-gen/bdefrain/fmscripts"
+   last-author="bdefrain"
+   kind="dir"
+   uuid="5ad673d7-9de5-0310-9841-9683b5787651"
+   revision="4143"/>
+<entry
+   committed-rev="1887"
+   name="fmresolve"
+   text-time="2006-04-06T23:13:41.000000Z"
+   committed-date="2005-08-09T12:34:16.383745Z"
+   checksum="51f6881712dd7dea4515d0ec633c1159"
+   last-author="bdefrain"
+   kind="file"
+   prop-time="2006-04-06T23:13:41.000000Z"/>
+<entry
+   committed-rev="1311"
+   name="fmdiff"
+   text-time="2006-04-06T23:13:41.000000Z"
+   committed-date="2005-06-02T12:29:56.099609Z"
+   checksum="caf25581ad937fc8361ce670134f5fbb"
+   last-author="bdefrain"
+   kind="file"
+   prop-time="2006-04-06T23:13:41.000000Z"/>
+<entry
+   committed-rev="1327"
+   name="Makefile"
+   text-time="2006-04-06T23:13:41.000000Z"
+   committed-date="2005-06-03T09:02:52.312323Z"
+   checksum="148202f17dd149b5df229699ba25080a"
+   last-author="bdefrain"
+   kind="file"
+   prop-time="2006-04-06T23:13:41.000000Z"/>
+<entry
+   committed-rev="1312"
+   name="fmdiff3"
+   text-time="2006-04-06T23:13:41.000000Z"
+   committed-date="2005-06-02T12:32:24.309250Z"
+   checksum="57adf2b5aef744ce2fe8f4f5e7fac12a"
+   last-author="bdefrain"
+   kind="file"
+   prop-time="2006-04-06T23:13:41.000000Z"/>
+</wc-entries>

@@ -1,0 +1,17 @@
+#!/bin/bash
+
+cd ~/dd/askms
+
+files=`find . -type f | egrep -v '(\.DS_Store|.*\.swp|.*\.log|.*\.sql|lighttpd\.conf|schema\.rb|/vendor/)'`
+
+echo "$files" | p4 -x - edit
+p4 revert -a ...
+
+echo "$files" | p4 -x - add
+
+echo "##"
+echo "##  These files may have been missed"
+echo "##"
+
+p4 opened
+

@@ -1,0 +1,137 @@
+#!/bin/bash
+cat <<x
+
+gpg-vim 20050106               Bjarni Rúnar Einarsson, http://bre.klaki.net/
+                                This code is in the public domain.
+
+x
+# This is a wrapper script to simplify editing of text files which are
+# stored symmetrically encrypted with GnuPG.
+# 
+# Usage:
+#
+#   gpg-vim file.txt
+#
+# While editing the file is decrypted to a temporary location in the user's
+# home directory. The script takes steps to ensure that any temporary files
+# are readable and writable by the user, but noone else.  The file is then
+# edited using vim.
+#
+# When the user has finished editing or viewing the contents of the file, 
+# he or she is asked whether the updated contents should be encrypted and 
+# saved back to the original location. Finally any temporary files are auto-
+# matically removed.
+#
+# LIMITATIONS:
+#
+#   - The script will leave unencrypted files lying around in the user's
+#     home directory if it terminates abnormally (e.g. by getting killed).
+#
+#   - Unencrypted data can obviously be stolen by the local superuser 
+#     (or e.g. automated backup scripts) while the file is being edited.
+#
+#   - Supposedly "rm" isn't the most secure way to remove sensitive data.
+#     The script attempts (somewhat weakly) to wipe all temporary files using
+#     "dd" from /dev/urandom before deleting them, but this only affects 
+#     files created by the script itself, not temporary files which may have 
+#     been created by the editor (such as swap files used by vim).  Also, 
+#     this is subject to limitations imposed by OS behavior (such as data 
+#     journalling, filesystem snapshots, backups, etc.).
+#
+# The script was announced and discussed a little bit in my weblog, in
+# this entry: http://bre.klaki.net/dagbok/faerslur/1105040646.shtml
+#
+###############################################################################
+
+# Our first and only argument is (or should be) the file to edit.
+#
+FILE=$1
+if [ "$FILE" = "" ]; then
+    echo "Usage: gpg-vim filename"
+    exit 1
+fi
+
+# The script uses a temporary directory in the user's home directory.  This 
+# is safer than a file in /tmp/, since there's virtually no chance of 
+# collisions, snooping, symlink attacks or such things.  Also, using a
+# temporary directory rather than a collection of individual temporary files
+# makes cleanup simpler and helps us catch (and wipe) automatic backups
+# created by some editors.
+#
+TEMPDIR=~/.gpg-vim-$$
+umask 077
+mkdir -p $TEMPDIR || exit 1
+
+# If the file exists, try to decrypt it.  Otherwise assume we're creating
+# a new file.
+#
+if [ -e "$FILE" ]; then
+    if ! gpg < "$FILE" >$TEMPDIR/data.txt; then
+        rm -rf $TEMPDIR
+        echo
+        echo "Aborting."
+        exit 1
+    fi
+    cp -a $TEMPDIR/data.txt $TEMPDIR/orig
+else
+    touch $TEMPDIR/orig $TEMPDIR/data.txt
+fi
+
+# Edit the unencrypted data...
+#
+vim -nc 'set nobackup'  $TEMPDIR/data.txt
+
+# Clear screen, to avoid leaving sensitive data in scrollback buffers.
+#
+clear
+
+# If the file has changed, re-encrypt and overwrite the original.
+#
+if ! diff $TEMPDIR/data.txt $TEMPDIR/orig >/dev/null; then
+    echo -n "File changed, encrypt new data and save? [YES/no] "
+    read YESNO
+    case $YESNO in
+        n*|N*) echo "Discarding changes."
+        ;;
+        *) while ! gpg -c -a <$TEMPDIR/data.txt >$TEMPDIR/data.gpg; do
+               clear
+               echo "Uh, please try again..."
+               echo
+           done 
+           cat <<tac >>$TEMPDIR/data.gpg
+
+Edited by gpg-vim: http://bre.klaki.net/programs/gpg-vim.txt
+
+tac
+           cat $TEMPDIR/data.gpg > $FILE \
+           && echo "OK, wrote new data to $FILE" \
+           || echo 'Save failed, discarding changes!'
+    esac
+else
+    echo "Nothing was changed."
+fi
+
+# Cleanup: overwrite temporary files with random(ish) data and then delete the
+#          entire temporary directory.  We use /dev/urandom rather than 
+#          /dev/random so we won't block if the machine runs out of entropy.
+#
+# Note that the wiping may be incomplete if the file shrinks by more than 12k
+# during editing or backup/swap files are created which are much larger than
+# the unencrypted data.  Oh well... the number 12 is arbitrary.
+#
+echo -n "Wiping and erasing temporary files "
+BLOCKS=$(/bin/ls -1s $TEMPDIR/data.txt |awk '{print 12+$1;}')
+for a in . . . . . . . . . . . . . . . . . . . . . . . . .; do
+  echo -n .
+  find $TEMPDIR -type f -exec \
+       dd if=/dev/urandom of=\{\} \
+       count=$BLOCKS bs=1024 >/dev/null 2>&1 \;
+
+  # This sync is (probably) necessary, otherwise kernel buffering may make 
+  # the whole wiping exercise futile.
+  #
+  sync
+done
+rm -rf $TEMPDIR
+echo " done."
+
