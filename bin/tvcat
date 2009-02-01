@@ -17,42 +17,53 @@ include FileUtils
 #
 DEST_ROOT = "#{ENV['HOME']}/Movies/TV"
 
-# For files where the episode is specified as e.g. s01e01 or variant -- most common
-#
-SNEM_MATCHER = /^(.*)s(\d{1,2})\.?ep?(\d{1,2}).*\.(...)$/i
-
-# For files where the episode is specified as e.g. .101. -- less common, but still happens
-# 
-# This won't catch any shows that have had more than nine seasons, because it's hard to 
-# distinguish those from years (e.g. battlestar.galactica.2003 for the new series)
-#
-NNN_MATCHER = /^(.*)\.(\d)x?(\d\d)\.(?:.*\.)?(...)$/i
-
-MATCHERS = [SNEM_MATCHER, NNN_MATCHER]
-
-# Names are sometimes written as abbreviations.  This map helps clean them up, and 
-# improve the capitalization and punctuation.  Replace strings of punctuation with spaces
-# and lowercase before looking up.
-#
-NAMES = [
-	[/battlestar galactica|bsg/,  'Battlestar Galactica'],
-	[/mad men|\Amm\Z/,  'Mad Men'],
-	[/confidential/,  'Doctor Who Confidential'],
-	[/doctor who/,  'Doctor Who'],
-	[/l word|lword/,  'The L Word'],
-	[/heroes/,  'Heroes'],
-	[/journeyman/,  'Journeyman'],
-	[/conchords|fotc/,  'Flight of the Conchords'],
-	[/entourage/,  'Entourage'],
-	[/torchwood/,  'Torchwood'],
-	[/tudors/, 'The Tudors'],
-	[/true blood/, 'True Blood']
-]
-
 HL = HighLine.new
+
+def setup
+
+	# For files where the episode is specified as e.g. s01e01 or variant -- most common
+	#
+	snem_matcher = Matcher.new(/^(.*)s(\d{1,2})\.?ep?(\d{1,2}).*\.(...)$/i)
+
+	# For files where the episode is specified as e.g. .101. -- less common, but still happens
+	# 
+	# This won't catch any shows that have had more than nine seasons, because it's hard to 
+	# distinguish those from years (e.g. battlestar.galactica.2003 for the new series)
+	#
+	nnn_matcher = Matcher.new(/^(.*)\.(\d)x?(\d\d)\.(?:.*\.)?(...)$/i)
+
+	# For daily shows (like the Daily Show :) where there's not exactly a season, but there's
+	# often a date.
+	date_matcher = DateMatcher.new(/^(.*)\.(\d{4}).(\d\d.\d\d)(?:.*\.)?(...)$/i)
+	date_inv_matcher = DateMatcher.new(/^(.*)\.(\d\d.\d\d)\.(\d{4})(?:.*\.)?(...)$/i, :season => 3, :episode => 2)
+
+	Matcher.matchers = [snem_matcher, nnn_matcher, date_matcher, date_inv_matcher]
+
+	# Names are sometimes written as abbreviations.  This map helps clean them up, and 
+	# improve the capitalization and punctuation.  Replace strings of punctuation with spaces
+	# and lowercase before looking up.
+	#
+	Matcher.names = [
+		[/battlestar galactica|bsg/,  'Battlestar Galactica'],
+		[/mad men|\Amm\Z/,  'Mad Men'],
+		[/confidential/,  'Doctor Who Confidential'],
+		[/doctor who/,  'Doctor Who'],
+		[/l word|lword/,  'The L Word'],
+		[/heroes/,  'Heroes'],
+		[/journeyman/,  'Journeyman'],
+		[/conchords|fotc/,  'Flight of the Conchords'],
+		[/entourage/,  'Entourage'],
+		[/torchwood/,  'Torchwood'],
+		[/tudors/, 'The Tudors'],
+		[/true blood/, 'True Blood'],
+		[/colbert/, 'The Colbert Report'],
+		[/daily show|\Atds|tds\Z/, 'The Daily Show']
+	]
+end
 
 def main(files)
 
+	setup
 	if files.size <= 0
 		puts "No files specified!"
 		exit 1
@@ -62,7 +73,7 @@ def main(files)
 	misses = []
 
 	for file in files
-		info = extract_info(file)
+		info = Matcher.extract_info(file)
 		if info
 			mapping[file] = info
 		else
@@ -76,10 +87,12 @@ def main(files)
 	end
 
 	print_list(mapping)
-	puts
-	puts HL.color("Unrecognized: ", :reverse)
-	misses.each do |file| 
-		puts file
+	if misses.size > 0
+		puts
+		puts HL.color("Unrecognized: ", :reverse)
+		misses.each do |file| 
+			puts file
+		end
 	end
 
 	puts
@@ -97,7 +110,7 @@ def print_list(mapping)
 	col1len = ary.transpose.first.map { |f| f.length }.max
 	col2len = ary.transpose.last.map { |i| i.show.length }.max
 	title_format = "%-#{col1len+1}s%-#{col2len+2}s%-7s%-8s%-5s"
-	format = "%-#{col1len}s|%-#{col2len+1}s|%6i|%7i|%4s"
+	format = "%-#{col1len}s|%-#{col2len+1}s|%6s|%7s|%4s"
 	puts HL.color(title_format % ["Filename", "Show", "Season", "Episode", "Type"], :reverse)
 	for file, info in ary
 		puts format % [file, info.show, info.season, info.episode, info.suffix]
@@ -107,7 +120,7 @@ end
 def move_files(mapping)
 	mapping.each_pair do |file, info|	
 		dir = File.join(DEST_ROOT, info.show, "Season #{info.season}")
-		new_file = File.join(dir, "Episode #{'%02d' % info.episode}.#{info.suffix}")
+		new_file = File.join(dir, "Episode #{info.episode}.#{info.suffix}")
 
 		mkdir_p(dir)
 		puts "moving #{file} -> #{new_file}"
@@ -115,34 +128,74 @@ def move_files(mapping)
 	end
 end
 
-def extract_info(filename)
-	for matcher in MATCHERS
-		matcher =~ filename
+class Matcher
 
-		next unless $1 && $2 && $3 && $4
+	attr_reader :regexp, :show_idx, :season_idx, :episode_idx, :suffix_idx
 
-		season = $2.to_i
-		episode = $3.to_i
-		suffix = $4
-		name = clean_name($1.downcase.gsub(/[[:punct:]]+/,' '))
+	class << self
+		attr_accessor :matchers, :names
 
-		next unless name
-
-		return OpenStruct.new(:show => name,
-							  :season => season,
-							  :episode => episode,
-							  :suffix => suffix)
-	end
-	return nil
-end
-
-def clean_name(name)
-	for matcher, clean in NAMES
-		if matcher =~ name
-			return clean
+		def extract_info(filename)
+			for matcher in matchers
+				result = matcher.match(filename)
+				return result if result
+			end
+			return nil
 		end
 	end
-	return nil
+
+	def initialize(regexp)
+		@regexp = regexp
+		@show_idx = 1
+		@season_idx = 2
+		@episode_idx = 3
+		@suffix_idx = 4
+	end
+
+	def match (filename)
+		md = regexp.match(filename)
+
+		return nil unless md && md[show_idx] && md[season_idx] && md[episode_idx] && md[suffix_idx]
+
+		show = clean_show_name(md[show_idx].downcase.gsub(/[[:punct:]]+/,' '))
+
+		return nil unless show
+
+		return OpenStruct.new(:show => show,
+							  :season => normalize(md[season_idx]),
+							  :episode => normalize(md[episode_idx]),
+							  :suffix => md[suffix_idx])
+	end
+
+	def normalize(num)
+		'%02d' % num.to_i
+	end
+
+
+	def clean_show_name(name)
+		for regexp, clean in Matcher.names
+			if regexp =~ name
+				return clean
+			end
+		end
+		return nil
+	end
+end
+
+class DateMatcher < Matcher
+
+	def initialize(regexp, options = {})
+		super(regexp)
+		@show_idx = options[:show] if options[:show]
+		@season_idx = options[:season] if options[:season]
+		@episode_idx = options[:episode] if options[:episode]
+		@suffix_idx = options[:suffix] if options[:suffix]
+	end
+
+	def normalize(num)
+		num
+	end
+		
 end
 
 main(ARGV.dup)
