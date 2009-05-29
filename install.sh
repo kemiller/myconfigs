@@ -5,5 +5,6 @@ ln -shFi ~/.config/vim ~/.vim
 ln -shFi ~/.config/vim/vimrc ~/.vimrc
 ln -shFi ~/.config/vim/gvimrc ~/.gvimrc
 ln -shFi ~/.config/bin ~/bin
+ln -shFi ~/.config/gitconfig ~/.gitconfig
 
 

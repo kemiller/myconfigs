@@ -3,6 +3,6 @@
 cd ~/Movies
 
 for i in ~/Downloads/*\ NZB; do
-	par2repair "$i"/*.par2 && unrar e "$i"/*.rar
+	par2repair "$i"/*.par2 && unrar e "$i"/*.part01.rar || unrar e "$i"/*.rar
 done
 	

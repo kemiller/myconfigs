@@ -3,7 +3,8 @@
 ## Environment
 ##
 
-export PATH=~/bin:~/svn/main/tools:~/Applications/MacVim/Contents/MacOS:/usr/local/bin:/usr/local/sbin:/opt/local/bin:/usr/local/mysql/bin:$PATH
+export PATH=~/bin:~/bin/depot_tools:~/svn/main/tools:~/Applications/MacVim/Contents/MacOS:/usr/local/bin:/usr/local/sbin:/opt/local/sbin:/opt/local/bin:/usr/local/mysql/bin:$PATH
+export MANPATH=/opt/local/man:$MANPATH
 export COLORTERM=1 
 export EDITOR=vim
 export GREP_OPTIONS="--color=auto"
@@ -13,12 +14,18 @@ export RUBYROOT=/opt/local/lib/ruby
 # Load development helpers
 . ~/svn/users/ken/bash_helper.sh
 
+# Automatic bash completion for MacPorts (including git and svn)
+. /opt/local/etc/bash_completion
+
 # Git stuff
-. ~/.config/bash/git-completion.bash
 export PS1='\h \w $(__git_ps1 "(%s) ")$ '
-alias gsr='git svn rebase'
+alias gsr='git svn rebase -v'
 alias gsf='git svn fetch'
 alias gsd='git svn dcommit'
+alias g='git'
+alias m='usegit && cd ~/main'
+
+alias epoch='date -j -f "%a %b %d %T %Z %Y" "`date`" "+%s"'
 
 export BRANCH=trunk
 
@@ -42,4 +49,17 @@ function switch() {
 	svn switch $SVNROOT/main/$1
 }
 
+function shave_and_a_haircut() {
+	echo -n 
+	sleep 0.3
+	echo -n 
+	sleep 0.3
+	echo -n 
+	sleep 0.3
+	echo -n 
+	sleep 0.6
+	echo -n 
+	sleep 0.3
+	echo -n 
+}
 	

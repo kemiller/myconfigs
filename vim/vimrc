@@ -119,3 +119,8 @@ if has("gui_macvim")
 	command Max set lines=2000 columns=2000
 	nmap <slient> <D-S-Up> :Max<CR>
 endif
+
+set laststatus=2
+set statusline=%t\ (%{GitBranch()})\ 
+
+

@@ -30,7 +30,7 @@ def setup
 	# This won't catch any shows that have had more than nine seasons, because it's hard to 
 	# distinguish those from years (e.g. battlestar.galactica.2003 for the new series)
 	#
-	nnn_matcher = Matcher.new(/^(.*)\.(\d)x?(\d\d)\.(?:.*\.)?(...)$/i)
+	nnn_matcher = Matcher.new(/^(.*)\.(0?\d)x?(\d\d)\.(?:.*\.)?(...)$/i)
 
 	# For daily shows (like the Daily Show :) where there's not exactly a season, but there's
 	# often a date.
@@ -57,7 +57,9 @@ def setup
 		[/tudors/, 'The Tudors'],
 		[/true blood/, 'True Blood'],
 		[/colbert/, 'The Colbert Report'],
-		[/daily show|\Atds|tds\Z/, 'The Daily Show']
+		[/daily show|\Atds|tds\Z/, 'The Daily Show'],
+		[/caprica/, 'Caprica'],
+		[/dollhouse/, 'Dollhouse']
 	]
 end
 
@@ -119,8 +121,8 @@ end
 
 def move_files(mapping)
 	mapping.each_pair do |file, info|	
-		dir = File.join(DEST_ROOT, info.show, "Season #{info.season}")
-		new_file = File.join(dir, "Episode #{info.episode}.#{info.suffix}")
+		dir = File.join(DEST_ROOT, info.show)
+		new_file = File.join(dir, "#{info.show}.s#{info.season}e#{info.episode}.#{info.suffix}")
 
 		mkdir_p(dir)
 		puts "moving #{file} -> #{new_file}"
@@ -198,4 +200,7 @@ class DateMatcher < Matcher
 		
 end
 
-main(ARGV.dup)
+Dir.chdir("#{ENV['HOME']}/Movies")
+files = ARGV.dup
+files = Dir.glob("*.*") if files.empty?
+main(files)
