@@ -35,7 +35,7 @@ alias gvim="mvim"
 alias ovim="mvim --remote-tab"
 alias kicksilver="killall Quicksilver && open -a Quicksilver"
 alias vibp="gvim ~/.bash_profile"
-alias cap="cap -f ~/svn/capistrano/Capfile"
+alias cap="cap -f ~/capistrano/Capfile"
 
 alias killmergeinfo="svn propget -R svn:mergeinfo * | field 1 | xargs svn propdel svn:mergeinfo"
 

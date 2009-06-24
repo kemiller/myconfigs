@@ -33,3 +33,6 @@
 	keepBackup = false
 [diff]
 	external = p4diff
+[user]
+	name = Ken Miller
+	email = ken@corp.mamasource.com

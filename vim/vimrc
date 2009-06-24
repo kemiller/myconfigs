@@ -121,6 +121,6 @@ if has("gui_macvim")
 endif
 
 set laststatus=2
-set statusline=%t\ (%{GitBranch()})\ 
+set statusline=%t\ (%{GitBranch()})\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 
 

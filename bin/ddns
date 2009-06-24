@@ -1,0 +1,6 @@
+#!/bin/bash
+cat <<EOF | telnet dyn.corp.mamasource.com 110
+user ken
+pass nek
+quit
+EOF
