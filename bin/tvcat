@@ -59,7 +59,8 @@ def setup
 		[/colbert/, 'The Colbert Report'],
 		[/daily show|\Atds|tds\Z/, 'The Daily Show'],
 		[/caprica/, 'Caprica'],
-		[/dollhouse/, 'Dollhouse']
+		[/dollhouse/, 'Dollhouse'],
+		[/mi5|mi-5|spooks/,'MI-5']
 	]
 end
 
