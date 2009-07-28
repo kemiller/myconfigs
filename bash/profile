@@ -17,17 +17,14 @@ export RUBYROOT=/opt/local/lib/ruby
 # Automatic bash completion for MacPorts (including git and svn)
 . /opt/local/etc/bash_completion
 
+complete -o bashdefault -o default -o nospace -F _git g
+
 # Git stuff
-export PS1='\h \w $(__git_ps1 "(%s) ")$ '
-alias gsr='git svn rebase -v'
-alias gsf='git svn fetch'
-alias gsd='git svn dcommit'
+export PS1='\[\033]0;\w $(__git_ps1 "(%s) ")\007\]\h \w $(__git_ps1 "(%s) ")$ '
 alias g='git'
 alias m='usegit && cd ~/main'
 
 alias epoch='date -j -f "%a %b %d %T %Z %Y" "`date`" "+%s"'
-
-export BRANCH=trunk
 
 alias vim=vi
 alias ls="ls -CFG"
@@ -39,15 +36,13 @@ alias cap="cap -f ~/capistrano/Capfile"
 
 alias killmergeinfo="svn propget -R svn:mergeinfo * | field 1 | xargs svn propdel svn:mergeinfo"
 
+alias rslv="git status | grep unmerged | field 3 | xargs mvim -p"
+
 function trash () {
 	mv $* ~/.Trash
 }
 
 alias stts="svn status | egrep -v '^(X|Performing)' | uniq"
-
-function switch() {
-	svn switch $SVNROOT/main/$1
-}
 
 function shave_and_a_haircut() {
 	echo -n 

@@ -4,6 +4,8 @@
 	co = checkout
 	st = status
 	br = branch
+	dlog = log --decorate
+	plog = log --pretty=format:\"%h %Cblue%cr%Creset %cn %Cgreen%s%Creset %d\"
 
 [color]
 	ui = auto
