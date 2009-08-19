@@ -28,6 +28,7 @@
 [merge]
 	keepBackup = false;
 	tool = p4merge
+	renameLimit = 1000
 [mergetool "p4merge"]
 	cmd = p4merge "$BASE" "$LOCAL" "$REMOTE" "$MERGED"
 	keepTemporaries = false
