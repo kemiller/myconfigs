@@ -12,10 +12,14 @@ export GREP_OPTIONS="--color=auto"
 export RUBYROOT=/opt/local/lib/ruby
 
 # Load development helpers
-. ~/svn/users/ken/bash_helper.sh
+. ~/.config/bash/dd.sh
 
 # Automatic bash completion for MacPorts (including git and svn)
-. /opt/local/etc/bash_completion
+if [ -f /opt/local/etc/bash_completion ]; then
+	. /opt/local/etc/bash_completion
+else
+	. ~/.config/bash/git-completion.bash
+fi
 
 complete -o bashdefault -o default -o nospace -F _git g
 
