@@ -22,12 +22,14 @@ set antialias
 
 set noshowcmd " this causes performance problems
 
+" toggle search term highlighting -- handy when you want it,
+" irritating and distracting when you don't.
+nmap <D-u> :nohls<CR>
+
 " nmap _SF :set guifont=vt100:h10:cANSI<CR>
 " nmap _MF :set guifont=Lucida_Console:h11:cANSI<CR>
 " nmap _LF :set guifont=Lucida_Console:h13:cANSI<CR>
 " nmap <M-m> :simalt ~x<CR>
-nmap <silent> <D-Z> :set lines=62 columns=185<CR>
-nmap <silent> <M-D-µ> :set lines=62 columns=120<CR>
 
 " Force this to work, even with rails plugin
 nmap <silent> <D-{> :tabp<CR>

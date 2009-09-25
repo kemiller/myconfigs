@@ -19,14 +19,30 @@ export RUBYROOT=/opt/local/lib/ruby
 
 complete -o bashdefault -o default -o nospace -F _git g
 
+git_dirty_flag() {
+  git status 2> /dev/null | grep -c : | awk '{if ($1 > 0) print "⚡ "}'
+}
+
+export GIT_PS1_SHOWDIRTYSTATE=true
+export GIT_PS1_DESCRIBE_STYLE=branch
+export GIT_PS1_SHOWUNTRACKEDFILES=true
 # Git stuff
-export PS1='\[\033]0;\w $(__git_ps1 "(%s) ")\007\]\h \w $(__git_ps1 "(%s) ")$ '
+#export PS1='\[\033]0;\w $(__git_ps1 "(%s) ")\007\]\h \w $(__git_ps1 "(%s) ")$(git_dirty_flag)➔  '
+export PS1='\[\033]0;\w $(__git_ps1 "(%s) ")\007\]\h \w $(__git_ps1 "(%s) ")➔  '
 alias g='git'
 alias m='usegit && cd ~/main'
 alias gf="git fetch"
 alias gpl="git pull"
 alias gps="git push"
 alias gm="git merge"
+
+function np () {
+	function project_dir () {
+		echo "$HOME/projects/nparty"
+	}
+	gemup
+	a
+}
 
 alias epoch='date -j -f "%a %b %d %T %Z %Y" "`date`" "+%s"'
 
@@ -63,4 +79,13 @@ function shave_and_a_haircut() {
 }
 	
 m
+
+
+##
+# Your previous /Users/ken/.bash_profile file was backed up as /Users/ken/.bash_profile.macports-saved_2009-08-31_at_22:03:01
+##
+
+# MacPorts Installer addition on 2009-08-31_at_22:03:01: adding an appropriate PATH variable for use with MacPorts.
+export PATH=/opt/local/bin:/opt/local/sbin:$PATH
+# Finished adapting your PATH environment variable for use with MacPorts.
 

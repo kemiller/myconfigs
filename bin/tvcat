@@ -17,6 +17,31 @@ include FileUtils
 #
 DEST_ROOT = "#{ENV['HOME']}/Movies/TV"
 
+# Names are sometimes written as abbreviations.  This map helps clean them up, and 
+# improve the capitalization and punctuation.  Replace strings of punctuation with spaces
+# and lowercase before looking up.
+#
+NAMES = [
+	[/battlestar galactica|bsg/i,  'Battlestar Galactica'],
+	[/mad men|\Amm\Z/i,  'Mad Men'],
+	[/confidential/i,  'Doctor Who Confidential'],
+	[/doctor who/i,  'Doctor Who'],
+	[/l word|lword/i,  'The L Word'],
+	[/heroes/i,  'Heroes'],
+	[/journeyman/i,  'Journeyman'],
+	[/conchords|fotc/i,  'Flight of the Conchords'],
+	[/entourage/i,  'Entourage'],
+	[/torchwood/i,  'Torchwood'],
+	[/tudors/i, 'The Tudors'],
+	[/true blood/i, 'True Blood'],
+	[/colbert/i, 'The Colbert Report'],
+	[/daily show|\Atds|tds\Z/i, 'The Daily Show'],
+	[/caprica/i, 'Caprica'],
+	[/dollhouse/i, 'Dollhouse'],
+	[/mi5|mi-5|spooks/i,'MI-5'],
+	[/deadwood/i, 'Deadwood']
+]
+
 HL = HighLine.new
 
 def setup
@@ -52,29 +77,7 @@ def setup
 		date_inv_matcher
 	]
 
-	# Names are sometimes written as abbreviations.  This map helps clean them up, and 
-	# improve the capitalization and punctuation.  Replace strings of punctuation with spaces
-	# and lowercase before looking up.
-	#
-	Matcher.names = [
-		[/battlestar galactica|bsg/i,  'Battlestar Galactica'],
-		[/mad men|\Amm\Z/i,  'Mad Men'],
-		[/confidential/i,  'Doctor Who Confidential'],
-		[/doctor who/i,  'Doctor Who'],
-		[/l word|lword/i,  'The L Word'],
-		[/heroes/i,  'Heroes'],
-		[/journeyman/i,  'Journeyman'],
-		[/conchords|fotc/i,  'Flight of the Conchords'],
-		[/entourage/i,  'Entourage'],
-		[/torchwood/i,  'Torchwood'],
-		[/tudors/i, 'The Tudors'],
-		[/true blood/i, 'True Blood'],
-		[/colbert/i, 'The Colbert Report'],
-		[/daily show|\Atds|tds\Z/i, 'The Daily Show'],
-		[/caprica/i, 'Caprica'],
-		[/dollhouse/i, 'Dollhouse'],
-		[/mi5|mi-5|spooks/i,'MI-5']
-	]
+	Matcher.names = NAMES
 end
 
 def main(files)

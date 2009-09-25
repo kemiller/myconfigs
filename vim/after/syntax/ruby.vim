@@ -12,4 +12,3 @@ vmap <buffer> __ :s/\%1c/#/<CR>''
 nmap <buffer> _+ :s/^#*//<CR>''
 vmap <buffer> _+ :s/^#*//<CR>''
 set sw=4 ts=4 noexpandtab
-set path+=$PROJECT_DIR/**,~/svn/main/$BRANCH/$APP/**

@@ -1,58 +1,26 @@
-source $VIMRUNTIME/vimrc_example.vim
-" source $VIMRUNTIME/mswin.vim
+"source $VIMRUNTIME/vimrc_example.vim
 
-" colorscheme kenneth
+" General Settings
 colorscheme default 
 set background=light
-
-" Slightly better completion when using buffer command
-cmap <Tab> <C-l><C-d>
-imap jj <esc>
-
-" I almost always just turn off the search highlighting, so might as well
-" have it off by default 
 set nohlsearch
-
+set incsearch
 set backupdir=~/.bak
-
+set backup
 set showmatch
 set ts=4 sw=4
 set noexpandtab
-
 set printoptions=portrait:n,paper:letter
+set laststatus=2
+set statusline=%t\ (%{GitBranch()})\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 
-nmap F :set fen!<CR>
-nmap gc gdbgf
-nmap <C-TAB> :bn<cr>
+filetype plugin indent on
+syntax on
 
-" tTfF;, are all lame as far as I can tell, so let's give them something
-" more useful to do.
-nmap ; <C-W>
-nmap t :tab
-
-set foldcolumn=0
-" set foldmethod=indent
-" set foldlevel=0
-" set foldnestmax=2
-" set fillchars=stl:_,stlnc:-,vert=\|,fold:\ ,diff:-
-
-" I <heart> cygwin (if I'm stuck on Windows, anyway)
-" set shell=bash.exe
-" set shellxquote=\"
-" set shellcmdflag=-c
-" set shellredir=>%s\ 2>&1
-" set shellpipe=2>&1\|\ tee
-
-" things to change per-project
-set tags=./tags,tags,$PROJ_DIR/tags
-set path+=$PROJECT_DIR/**
-set path+=~/svn/main/$BRANCH/$APP/**
-
-autocmd BufRead,BufNewFile *.rhtml set sw=2 ts=2 expandtab
-autocmd BufRead,BufNewFile *.yaml,*.yml set sw=2 ts=2 expandtab smartindent
-autocmd BufRead,BufNewFile *.viki set smartindent ft=viki
-
-let Tlist_Ctags_Cmd='C:\vim\vim64\ctags.exe'
+" netrw config
+"
+" Hide . .. and .svn
+let g:netrw_list_hide='^\.\(svn\|\.\)\?/$'
 
 " Persistent typos
 iabbrev Parnter Partner
@@ -60,67 +28,56 @@ iabbrev parnter partner
 iabbrev Paramter Parameter
 iabbrev paramter parameter
 
-" toggle search term highlighting -- handy when you want it,
-" irritating and distracting when you don't.
-nmap <M-u> :nohls<CR>
-nmap <D-u> :nohls<CR>
-
-nmap <M-r> gg=G''
-nmap <M-c> :make<CR>
-nmap <M-o> :!p4 edit %:gs?\\?/?<CR>
-nmap <D-r> gg=G''
-nmap <D-c> :make<CR>
-nmap <D-C> :Rake<CR>
-nmap <D-e> :!p4 edit %:gs?\\?/?<CR>
-
-nmap _S /,<CR>bywdwwdw?,<CR>P/,<CR>l"0p
-
-" I like these emacs keys
+" Key Bindings
+nmap <C-TAB> :tabnext<cr>
+nmap <C-S-TAB> :tabprev<cr>
 nmap <C-a> ^
 nmap <C-e> $
 imap <C-a> <ESC>gI
 imap <C-e> <ESC>A
 
-" netrw config
-"
-" Hide . .. and .svn
-let g:netrw_list_hide='^\.\(svn\|\.\)\?/$'
+map \t :FuzzyFinderTextMate<CR>
+
+" Macros
+
+" Swap two items in a comma-separated list.  Needs some work
+nmap _S /,<CR>bywdwwdw?,<CR>P/,<CR>l"0p
+
+augroup misc
+	" Make crontab -e work
+	autocmd BufRead,BufNewFile /private/tmp/crontab.* set nowritebackup backupcopy=yes
+	autocmd BufRead,BufNewFile *.rhtml set sw=2 ts=2 expandtab
+	autocmd BufRead,BufNewFile *.yaml,*.yml set sw=2 ts=2 expandtab smartindent
+	autocmd BufRead,BufNewFile *.viki set smartindent ft=viki
+augroup END
 
 " rails plugin settings
 let g:rails_syntax=1
 let g:rails_statusline=1
 
-" Make crontab -e work
-au BufRead,BufNewFile /private/tmp/crontab.* set nowritebackup backupcopy=yes
+augroup rails
+	
+	" remove any commands from this group so that we're starting fresh
+	autocmd! 
 
-" Rails 'IDE' stuff
-autocmd User Rails command! -nargs=+ Desc :DBDescribeTable
-autocmd User Rails cmap ac<space> RTcontroller 
-autocmd User Rails cmap am<space> RTmodel 
-autocmd User Rails cmap av<space> RTview 
-autocmd User Rails cmap ah<space> RThelper 
-autocmd User Rails cmap tu<space> RTunittest 
-autocmd User Rails cmap tf<space> RTfunctionaltest 
-autocmd User Rails cmap fx<space> RTfixture 
-autocmd User Rails cmap mg<space> RTmigration 
+	" Rails 'IDE' stuff
+	autocmd User Rails command! -nargs=+ Desc :DBDescribeTable
+	autocmd User Rails cmap ac<space> RTcontroller 
+	autocmd User Rails cmap am<space> RTmodel 
+	autocmd User Rails cmap av<space> RTview 
+	autocmd User Rails cmap ah<space> RThelper 
+	autocmd User Rails cmap tu<space> RTunittest 
+	autocmd User Rails cmap tf<space> RTfunctionaltest 
+	autocmd User Rails cmap fx<space> RTfixture 
+	autocmd User Rails cmap mg<space> RTmigration 
 
-command -bar -nargs=1 OpenURL :!open <args>
+	autocmd User Rails set sw=4 ts=4 noet path+=~/main/shared
+	autocmd User Rails.fixture set sw=2 ts=8 et syntax=yaml
+	autocmd User Rails/config/*.yml set sw=2 ts=8 et syntax=yaml
 
-autocmd User Rails set sw=4 ts=4 noet path+=~/main/shared
-autocmd User Rails.fixture set sw=2 ts=8 et syntax=yaml
-autocmd User Rails/config/*.yml set sw=2 ts=8 et syntax=yaml
+	autocmd User Rails nmap <D-C> :Rake<CR>
 
-map \t :FuzzyFinderTextMate<CR>
+augroup END
 
-filetype plugin indent on
-syntax on
-
-if has("gui_macvim")
-	command Max set lines=2000 columns=2000
-	nmap <slient> <D-S-Up> :Max<CR>
-endif
-
-set laststatus=2
-set statusline=%t\ (%{GitBranch()})\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 
 
