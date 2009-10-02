@@ -3,6 +3,25 @@
 cd ~/Movies
 
 for i in ~/Downloads/*\ NZB; do
-	par2repair "$i"/*.par2 && unrar e "$i"/*.part{0,00,000}1.rar || unrar e "$i"/*.rar
+	#par2repair "$i"/*.par2
+
+	if [ -f  "$i"/*.part1.rar ]; then
+		file=`ls "$i"/*.part1.rar`
+	elif [ -f  "$i"/*.part01.rar ]; then
+		file=`ls "$i"/*.part01.rar`
+	elif [ -f  "$i"/*.part001.rar ]; then
+		file=`ls "$i"/*.part001.rar`
+	elif [ -f  "$i"/*.part0001.rar ]; then
+		file=`ls "$i"/*.part0001.rar`
+	elif [ -f  "$i"/*.rar ]; then
+		file=`ls "$i"/*.rar`
+	fi
+
+	if [ -n "$file" ]; then
+		echo "Unraring $file"
+		unrar e "$file"
+	else
+		echo "Could not find a rar file in $i"
+	fi
 done
 	

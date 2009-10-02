@@ -39,6 +39,7 @@ NAMES = [
 	[/caprica/i, 'Caprica'],
 	[/dollhouse/i, 'Dollhouse'],
 	[/mi5|mi-5|spooks/i,'MI-5'],
+	[/dexter/i, 'Dexter'],
 	[/deadwood/i, 'Deadwood']
 ]
 
