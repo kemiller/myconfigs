@@ -11,4 +11,5 @@ vmap <buffer> __ :s/\%1c/#/<CR>''
 " Uncomment the current line or the current selection
 nmap <buffer> _+ :s/^#*//<CR>''
 vmap <buffer> _+ :s/^#*//<CR>''
+
 set sw=4 ts=4 noexpandtab
