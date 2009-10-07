@@ -13,9 +13,6 @@ alias rgrep="grep -r --include='*.rb'"
 export PATH=~/svn/capistrano:~/svn/utils/mac/fmscripts:$PATH
 
 function usegit () {
-	function master_dir () {
-		echo "$HOME/main"
-	}
 	alias b="git co"
 	complete -o bashdefault -o default -o nospace -F _git_branch b
 }
@@ -60,11 +57,7 @@ function project_dir () {
 }
 
 function master_dir () {
-	if [ -z "$PROJECT_DIR" ]; then
-		echo "$HOME/svn/main/$BRANCH"
-	else
-		echo "$PROJECT_DIR/$BRANCH"
-	fi
+	echo "$HOME/main"
 }
 
 function a () {
@@ -77,30 +70,13 @@ function p () {
 
 alias shared="export PROJECT_DIR=''; export APP=shared; a"
 
-for app in `\ls -1 ~/svn/main/trunk`; do 
+for app in `\ls -1 ~/main`; do 
 	alias $app="export PROJECT_DIR=''; export APP=$app; a"
 done
 
-alias msqa="export PROJECT_DIR=~/svn/msqa; a"
-
 alias sp='export PROJECT_DIR=`pwd`; unset BRANCH'
 
-function trunk () {
-	export BRANCH=trunk
-	p $*
-}
-
-function br () {
-	export BRANCH=branches/$1
-	p $2
-}
-
 alias b="br"
-
-function rel () {
-   	export BRANCH=`cd ~/svn/main && \ls -1d releases/*/*-$1`
-	p $2
-}
 
 function ac () {
 	cd $(project_dir)/app/controllers/$1
@@ -130,11 +106,11 @@ function ts () {
 	done
 	
 	if [ -n "$thefile" ]; then
-		rake test:units TEST="$thefile" TESTOPTS="$2 $3 $4"
+		${RAKE:-rake} test:units TEST="$thefile" TESTOPTS="$2 $3 $4"
 	elif [ "$1" = "f" ]; then
-		rake test:functionals
+		${RAKE:-rake} test:functionals
 	elif [ "$1" = "u" ]; then
-		rake test:units
+		${RAKE:-rake} test:units
 	else
 		echo "$1 not found"
 	fi
@@ -188,8 +164,6 @@ function gemdn() {
 
 complete -W '`\ls -1 $(project_dir)/app/views`' av
 complete -W '`\ls -1 $(project_dir)`' a
-complete -W '`\ls -1d $HOME/svn/main/releases/*/????-* | cut -d- -f2`' rel
-complete -W '`\ls -1d $HOME/svn/main/branches/* | ruby -nae "puts split(%q(/)).last"`' branch
 complete -C ~/bin/rake_bash_complete -o default rake
 complete -d cd
 complete -d pushd
