@@ -6,9 +6,9 @@
 set encoding=utf-8
 "set termencoding=macroman
 "set guifont=Lucida_Sans_Typewriter_Regular:h18
-"set guifont=Bitstream_Vera_Sans_Mono:h18
-set guifont=Consolas:h16
-set transparency=5
+set guifont=Bitstream\ Vera\ Sans\ Mono\ 12
+"set guifont=Consolas:h16
+"set transparency=5
 
 set hlsearch
 set guioptions-=T
