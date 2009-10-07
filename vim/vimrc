@@ -14,6 +14,9 @@ set printoptions=portrait:n,paper:letter
 set laststatus=2
 set statusline=%t\ (%{GitBranch()})\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 
+" Use tabs for opening files under the cursor
+nmap gtf :tabe <cfile><CR>
+
 filetype plugin indent on
 syntax on
 

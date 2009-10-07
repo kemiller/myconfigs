@@ -5,21 +5,11 @@ export FIGNORE=svn
 export SVNROOT=https://eng.doubledyno.com/svn
 
 export APP=core
-export BRANCH=trunk
 export STAGE=qa
 
 alias rgrep="grep -r --include='*.rb'"
 
 export PATH=~/svn/capistrano:~/svn/utils/mac/fmscripts:$PATH
-
-function usegit () {
-	alias b="git co"
-	complete -o bashdefault -o default -o nospace -F _git_branch b
-}
-
-function trash () {
-	mv $* ~/.Trash
-}
 
 alias tf='cd $(project_dir)/test/functional'
 alias tlf='cd $(project_dir)/test/legacy/functional'
@@ -33,10 +23,6 @@ alias pt='cd $(project_dir)/test/prototypes'
 alias my='mysql -D ms_main_development -u root'
 alias cn='$(project_dir)/script/console'
 
-function sw () {
-	svn switch $SVNROOT/main/$1
-}
-
 function lookup_files() {
 	query=`echo $1 | sed 's/./&*/g;'`
 	mdfind -onlyin $(project_dir)/app "kMDItemFSName=$query" | tr -s ' \t\r\n'
@@ -48,16 +34,12 @@ function mong() {
 	(a ; mongrel_rails start -C config/mongrel/development.yml $* )
 }
 
-function project_dir () {
-	if [ -z "$PROJECT_DIR" ]; then
-		echo "$(master_dir)/$APP"
-	else
-		echo "$PROJECT_DIR/$BRANCH"
-	fi
-}
-
 function master_dir () {
 	echo "$HOME/main"
+}
+
+function project_dir () { 
+	echo $(master_dir)/$APP
 }
 
 function a () {
@@ -68,15 +50,12 @@ function p () {
 	cd $(master_dir)/$1
 }
 
-alias shared="export PROJECT_DIR=''; export APP=shared; a"
-
 for app in `\ls -1 ~/main`; do 
-	alias $app="export PROJECT_DIR=''; export APP=$app; a"
+	alias $app="export APP=$app; a"
 done
 
-alias sp='export PROJECT_DIR=`pwd`; unset BRANCH'
-
-alias b="br"
+alias b="git checkout"
+complete -o bashdefault -o default -o nospace -F _git_branch b
 
 function ac () {
 	cd $(project_dir)/app/controllers/$1
@@ -94,10 +73,13 @@ function ah () {
 function ts () {
 	u=$(project_dir)/test/unit
 	f=$(project_dir)/test/functional
+	lu=$(project_dir)/test/legacy/unit
+	lf=$(project_dir)/test/legacy/functional
 	file=`echo $1 | sed 's/.rb$//;'`
 	thefile=""
 
-	for i in $u/$1 $u/${1}_test $f/$1 $f/${1}_test $f/${1}_controller_test; do
+	for i in $u/$1 $u/${1}_test $f/$1 $f/${1}_test $f/${1}_controller_test \
+			$lu/$1 $lu/${1}_test $lf/$1 $lf/${1}_test $lf/${1}_controller_test; do
 		#echo "Trying $i"
 		if [ -e ${i}.rb ]; then
 			thefile=${i}.rb
@@ -111,6 +93,14 @@ function ts () {
 		${RAKE:-rake} test:functionals
 	elif [ "$1" = "u" ]; then
 		${RAKE:-rake} test:units
+	elif [ "$1" = "i" ]; then
+		${RAKE:-rake} test:integration
+	elif [ "$1" = "lf" ]; then
+		${RAKE:-rake} test:legacy:functionals
+	elif [ "$1" = "lu" ]; then
+		${RAKE:-rake} test:legacy:units
+	elif [ "$1" = "li" ]; then
+		${RAKE:-rake} test:legacy:integration
 	else
 		echo "$1 not found"
 	fi
@@ -132,19 +122,11 @@ function con () {
 	(a && ./script/generate controller -c $name "$@" && tf && $EDITOR ${name}_controller_test.rb )
 }
 
-function unmigrate() {
-	echo "update schema_info set version=$1;" | my
-}
-
-function look() {
-	(a && find app test config -type f | fgrep -v .svn | xargs grep --color=auto $*)
-}
-
 function gd () {
-	pushd $RUBYROOT/gems/1.8/gems/$1
+	pushd $RUBYROOT/gems/1.8/gems/$1 || pushd $RUBYROOT/gems/1.9.*/gems/$1 
 }
 
-complete -W '`\ls -1 $RUBYROOT/gems/1.8/gems`' gd
+complete -W '`\ls -1 $RUBYROOT/gems/1.8/gems $RUBYROOT/gems/1.9.*/gems`' gd
 
 function av () {
   cd $(project_dir)/app/views/$1
