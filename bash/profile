@@ -3,7 +3,7 @@
 ## Environment
 ##
 
-export PATH=~/bin:~/bin/depot_tools:~/svn/main/tools:~/Applications/MacVim/Contents/MacOS:/usr/local/bin:/usr/local/sbin:/opt/local/sbin:/opt/local/bin:/usr/local/mysql/bin:$PATH
+export PATH=~/bin:~/bin/depot_tools:~/svn/main/tools:~/Applications/MacVim/Contents/MacOS:"~/Library/PLT Scheme v4.2.2/bin":/usr/local/bin:/usr/local/sbin:/opt/local/sbin:/opt/local/bin:/usr/local/mysql/bin:$PATH
 export MANPATH=/opt/local/man:$MANPATH
 export COLORTERM=1 
 export EDITOR=vim
@@ -44,6 +44,9 @@ function np () {
 	function project_dir () {
 		echo "$HOME/projects/nparty"
 	}
+	function am () {
+		cd $(project_dir)/app/models/$1
+	}
 	gemup
 	a
 }
@@ -82,9 +85,6 @@ function shave_and_a_haircut() {
 	echo -n 
 }
 	
-m
-
-
 ##
 # Your previous /Users/ken/.bash_profile file was backed up as /Users/ken/.bash_profile.macports-saved_2009-08-31_at_22:03:01
 ##

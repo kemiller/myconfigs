@@ -74,8 +74,9 @@ augroup rails
 	autocmd User Rails cmap fx<space> RTfixture 
 	autocmd User Rails cmap mg<space> RTmigration 
 
-	autocmd User Rails set sw=4 ts=4 noet path+=~/main/shared
-	autocmd User Rails.fixture set sw=2 ts=8 et syntax=yaml
+	autocmd User ~/main/* set sw=4 ts=4 noet path+=~/main/shared
+	autocmd User ~/main/shared/* set path+=~/main/core
+	autocmd User Rails.fixture* set sw=2 ts=8 et syntax=yaml
 	autocmd User Rails/config/*.yml set sw=2 ts=8 et syntax=yaml
 
 	autocmd User Rails nmap <D-C> :Rake<CR>

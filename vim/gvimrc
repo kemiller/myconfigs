@@ -5,9 +5,9 @@
 " set nomacatsui
 set encoding=utf-8
 "set termencoding=macroman
-"set guifont=Lucida_Sans_Typewriter_Regular:h18
-set guifont=Bitstream\ Vera\ Sans\ Mono\ 12
-"set guifont=Consolas:h16
+"set guifont=Lucida_Sans_Typewriter_Regular:h14
+"set guifont=Bitstream\ Vera\ Sans\ Mono\ 12
+set guifont=Consolas:h16
 "set transparency=5
 
 set hlsearch
@@ -36,4 +36,6 @@ nmap <silent> <D-{> :tabp<CR>
 nmap <silent> <D-}> :tabn<CR>
 nmap <silent> <D-w> :confirm close<CR>
 
+nmap <D-M> :Rake<CR>
+nmap <M-D-M> :.Rake<CR>
 

@@ -3,7 +3,7 @@
 cd ~/Movies
 
 for i in ~/Downloads/*\ NZB; do
-	#par2repair "$i"/*.par2
+	par2repair "$i"/*.par2
 
 	if [ -f  "$i"/*.part1.rar ]; then
 		file=`ls "$i"/*.part1.rar`
