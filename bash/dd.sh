@@ -61,6 +61,9 @@ function ac () {
 	cd $(project_dir)/app/controllers/$1
 }
 function am () {
+	cd $(project_dir)/app/models/$1
+}
+function sam () {
 	cd $(project_dir)/../shared/app/models/$1
 }
 function aa () {

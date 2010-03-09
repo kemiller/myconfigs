@@ -5,6 +5,8 @@
 # url: http://tech.inhelsinki.nl/locationchanger/
 # version: 0.4
 
+exit 0
+
 # redirect all IO to /dev/null (comment this out if you want to debug)
 exec 1>/dev/null 2>/dev/null
 

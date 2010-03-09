@@ -3,11 +3,12 @@
 ## Environment
 ##
 
-export PATH=~/bin:~/bin/depot_tools:~/.gem/ruby/1.8/bin:~/Applications/MacVim/Contents/MacOS:"~/Library/PLT Scheme v4.2.2/bin":/usr/local/bin:/usr/local/sbin:/opt/local/sbin:/opt/local/bin:/usr/local/mysql/bin:$PATH
+export PATH=~/bin:~/bin/depot_tools:~/.gem/ruby/1.8/bin:~/Applications/MacVim/Contents/MacOS:"~/Library/PLT Scheme v4.2.2/bin":/usr/local/bin:/usr/local/sbin:/opt/local/sbin:/opt/local/bin:/usr/local/mysql/bin:/usr/local/mzscheme/bin:/usr/local/cobra/bin:$PATH
 export MANPATH=/opt/local/man:$MANPATH
 export COLORTERM=1 
 export EDITOR=vim
 export GREP_OPTIONS="--color=auto"
+export LESS="-rf"
 
 export RUBYROOT=/opt/local/lib/ruby
 
@@ -23,16 +24,14 @@ fi
 
 complete -o bashdefault -o default -o nospace -F _git g
 
-git_dirty_flag() {
-  git status 2> /dev/null | grep -c : | awk '{if ($1 > 0) print "⚡ "}'
-}
-
-#export GIT_PS1_SHOWDIRTYSTATE=true
+export GIT_PS1_SHOWDIRTYSTATE=true
 #export GIT_PS1_DESCRIBE_STYLE=branch
 #export GIT_PS1_SHOWUNTRACKEDFILES=true
 # Git stuff
 #export PS1='\[\033]0;\w $(__git_ps1 "(%s) ")\007\]\h \w $(__git_ps1 "(%s) ")$(git_dirty_flag)➔  '
-export PS1='\[\033]0;\w $(__git_ps1 "(%s) ")\007\]\h \w $(__git_ps1 "(%s) ")➔  '
+#export PS1='\[\033]0;\w $(__git_ps1 "(%s) ")\007\]\h \w $(__git_ps1 "(%s) ")➔  '
+#export PS1='\[\033]0;\w $(export GITPROMPT=`__git_ps1 "(%s) "`; echo $GITPROMPT)\007\]\h \w ${GITPROMPT}➔  '
+export PS1='$(gitprompt=`__git_ps1 "(%s) "`; echo "\[\033]0;\w $gitprompt\007\]\h \w ${gitprompt}➔  ")'
 alias g='git'
 alias m='cd ~/main'
 alias gf="git fetch"

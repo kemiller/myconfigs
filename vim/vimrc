@@ -58,6 +58,11 @@ augroup END
 let g:rails_syntax=1
 let g:rails_statusline=1
 
+" These don't seem to work, but I'd like them to, so I'm leaving them around
+autocmd User ~/.git/rebase-merge/git-rebase-todo nmap s ciwsquash<ESC>
+autocmd User ~/.git/rebase-merge/git-rebase-todo nmap p ciwpick<ESC>
+autocmd User ~/.git/rebase-merge/git-rebase-todo nmap e ciwedit<ESC>
+
 augroup rails
 	
 	" remove any commands from this group so that we're starting fresh
@@ -77,7 +82,9 @@ augroup rails
 	autocmd User ~/main/* set sw=4 ts=4 noet path+=~/main/shared
 	autocmd User ~/main/shared/* set path+=~/main/core
 	autocmd User Rails.fixture* set sw=2 ts=8 et syntax=yaml
-	autocmd User Rails/config/*.yml set sw=2 ts=8 et syntax=yaml
+	autocmd User *.yml set sw=2 ts=8 et syntax=yaml
+	autocmd User *.yaml set sw=2 ts=8 et syntax=yaml
+	autocmd User ~/main/deals/* set sw=2 ts=8 et
 
 	autocmd User Rails nmap <D-C> :Rake<CR>
 
