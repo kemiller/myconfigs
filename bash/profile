@@ -6,7 +6,7 @@
 export PATH=~/bin:~/bin/depot_tools:~/.gem/ruby/1.8/bin:~/Applications/MacVim/Contents/MacOS:"~/Library/PLT Scheme v4.2.2/bin":/usr/local/bin:/usr/local/sbin:/opt/local/sbin:/opt/local/bin:/usr/local/mysql/bin:/usr/local/mzscheme/bin:/usr/local/cobra/bin:$PATH
 export MANPATH=/opt/local/man:$MANPATH
 export COLORTERM=1 
-export EDITOR=vim
+export EDITOR='mvim -v'
 export GREP_OPTIONS="--color=auto"
 export LESS="-rf"
 
@@ -68,6 +68,10 @@ function trash () {
 	mv $* ~/.Trash
 }
 
+function desc () {
+	echo "desc $1" | my deals_development 
+}
+
 alias stts="svn status | egrep -v '^(X|Performing)' | uniq"
 
 function shave_and_a_haircut() {
@@ -84,11 +88,6 @@ function shave_and_a_haircut() {
 	echo -n 
 }
 	
-##
-# Your previous /Users/ken/.bash_profile file was backed up as /Users/ken/.bash_profile.macports-saved_2009-08-31_at_22:03:01
-##
-
-# MacPorts Installer addition on 2009-08-31_at_22:03:01: adding an appropriate PATH variable for use with MacPorts.
-export PATH=/opt/local/bin:/opt/local/sbin:$PATH
-# Finished adapting your PATH environment variable for use with MacPorts.
+if [[ -d /Users/ken/.ec2 ]] ; then source /Users/ken/.ec2/vars; fi
+if [[ -s /Users/ken/.rvm/scripts/rvm ]] ; then source /Users/ken/.rvm/scripts/rvm ; fi
 

@@ -6,6 +6,7 @@ export SVNROOT=https://eng.doubledyno.com/svn
 
 export APP=core
 export STAGE=qa
+export GUI_EDITOR="mvim --remote-tab"
 
 alias rgrep="grep -r --include='*.rb'"
 
@@ -111,18 +112,18 @@ function ts () {
 
 function mig () {
 	name=$1
-	(a && ./script/generate migration -g $name && mg && $EDITOR ???_$name.rb)
+	(a && ./script/generate migration -g $name && mg && $GUI_EDITOR [[:digit:]]*[[:digit:]]_$name.rb)
 }
 
 function mod () {
 	name=$1
-	(a && ./script/generate model -g $name && tu && $EDITOR ${name}_test.rb)
+	(a && ./script/generate model -g $name && tu && $GUI_EDITOR ${name}_test.rb)
 }
 
 function con () {
 	name=$1
 	shift 1
-	(a && ./script/generate controller -c $name "$@" && tf && $EDITOR ${name}_controller_test.rb )
+	(a && ./script/generate controller -c $name "$@" && tf && $GUI_EDITOR ${name}_controller_test.rb )
 }
 
 function gd () {

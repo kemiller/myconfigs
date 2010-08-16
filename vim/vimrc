@@ -13,6 +13,8 @@ set noexpandtab
 set printoptions=portrait:n,paper:letter
 set laststatus=2
 set statusline=%t\ (%{GitBranch()})\ %h%m%r%=%-14.(%l,%c%V%)\ %P
+set wildignore=.git,vendor,.svn,*~,*.swp,*.swo
+set switchbuf=usetab
 
 " Use tabs for opening files under the cursor
 nmap gtf :tabe <cfile><CR>
@@ -34,12 +36,11 @@ iabbrev paramter parameter
 " Key Bindings
 nmap <C-TAB> :tabnext<cr>
 nmap <C-S-TAB> :tabprev<cr>
-nmap <C-a> ^
-nmap <C-e> $
 imap <C-a> <ESC>gI
 imap <C-e> <ESC>A
 
-map \t :FuzzyFinderTextMate<CR>
+map ,t :tabnew<CR>:CommandT<CR>
+map ,e :CommandT<CR>
 
 " Macros
 
@@ -87,6 +88,7 @@ augroup rails
 	autocmd User ~/main/deals/* set sw=2 ts=8 et
 
 	autocmd User Rails nmap <D-C> :Rake<CR>
+	autocmd User Rails nmap <D-R> :Rake db:migrate:redo<CR>
 
 augroup END
 

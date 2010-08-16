@@ -36,6 +36,8 @@ nmap <silent> <D-{> :tabp<CR>
 nmap <silent> <D-}> :tabn<CR>
 nmap <silent> <D-w> :confirm close<CR>
 
+nmap <silent> <D-t> :tabnew<CR>:CommandT<CR>
+
 nmap <D-M> :Rake<CR>
 nmap <M-D-M> :.Rake<CR>
 
