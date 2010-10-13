@@ -9,6 +9,7 @@ export COLORTERM=1
 export EDITOR='mvim -v'
 export GREP_OPTIONS="--color=auto"
 export LESS="-rf"
+export PAGER="less $LESS"
 
 export RUBYROOT=/opt/local/lib/ruby
 
