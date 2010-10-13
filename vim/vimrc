@@ -80,12 +80,12 @@ augroup rails
 	autocmd User Rails cmap fx<space> RTfixture 
 	autocmd User Rails cmap mg<space> RTmigration 
 
-	autocmd User ~/main/* set sw=4 ts=4 noet path+=~/main/shared
+	autocmd User ~/main/{core,crm,support}/* set path+=~/main/shared
 	autocmd User ~/main/shared/* set path+=~/main/core
 	autocmd User Rails.fixture* set sw=2 ts=8 et syntax=yaml
+	autocmd User Gemfile set sw=2 ts=8 et
 	autocmd User *.yml set sw=2 ts=8 et syntax=yaml
 	autocmd User *.yaml set sw=2 ts=8 et syntax=yaml
-	autocmd User ~/main/deals/* set sw=2 ts=8 et
 
 	autocmd User Rails nmap <D-C> :Rake<CR>
 	autocmd User Rails nmap <D-R> :Rake db:migrate:redo<CR>

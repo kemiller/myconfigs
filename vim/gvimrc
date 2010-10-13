@@ -17,7 +17,8 @@ set guioptions+=c
 "colorscheme midnight2
 "colorscheme vividchalk
 "colorscheme delek
-colorscheme railscasts
+"colorscheme railscasts
+colorscheme liquidcarbon
 set antialias
 
 set noshowcmd " this causes performance problems
