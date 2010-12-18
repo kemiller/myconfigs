@@ -4,7 +4,7 @@ export FIGNORE=svn
 
 export SVNROOT=https://eng.doubledyno.com/svn
 
-export APP=core
+export APP=deals
 export STAGE=qa
 export GUI_EDITOR="mvim --remote-tab"
 
@@ -21,7 +21,8 @@ alias db='cd $(project_dir)/db'
 alias mg='cd $(project_dir)/db/migrate'
 alias fx='cd $(project_dir)/test/fixtures'
 alias pt='cd $(project_dir)/test/prototypes'
-alias my='mysql -D ms_main_development -u root'
+alias mym='mysql -D ms_main_development -u root'
+alias myd='mysql -D deals_development -u root'
 alias cn='$(project_dir)/script/console'
 
 function lookup_files() {

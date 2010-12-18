@@ -8,16 +8,12 @@ set incsearch
 set backupdir=~/.bak
 set backup
 set showmatch
-set ts=4 sw=4
 set noexpandtab
 set printoptions=portrait:n,paper:letter
 set laststatus=2
 set statusline=%t\ (%{GitBranch()})\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 set wildignore=.git,vendor,.svn,*~,*.swp,*.swo
 set switchbuf=usetab
-
-" Use tabs for opening files under the cursor
-nmap gtf :tabe <cfile><CR>
 
 filetype plugin indent on
 syntax on
@@ -39,8 +35,12 @@ nmap <C-S-TAB> :tabprev<cr>
 imap <C-a> <ESC>gI
 imap <C-e> <ESC>A
 
+" Command-T bindings
 map ,t :tabnew<CR>:CommandT<CR>
 map ,e :CommandT<CR>
+
+" Use tabs for opening files under the cursor
+nmap gtf :tabe <cfile><CR>
 
 " Macros
 
@@ -60,9 +60,9 @@ let g:rails_syntax=1
 let g:rails_statusline=1
 
 " These don't seem to work, but I'd like them to, so I'm leaving them around
-autocmd User ~/.git/rebase-merge/git-rebase-todo nmap s ciwsquash<ESC>
-autocmd User ~/.git/rebase-merge/git-rebase-todo nmap p ciwpick<ESC>
-autocmd User ~/.git/rebase-merge/git-rebase-todo nmap e ciwedit<ESC>
+autocmd User */.git/rebase-merge/git-rebase-todo nmap s ciwsquash<ESC>
+autocmd User */.git/rebase-merge/git-rebase-todo nmap p ciwpick<ESC>
+autocmd User */.git/rebase-merge/git-rebase-todo nmap e ciwedit<ESC>
 
 augroup rails
 	

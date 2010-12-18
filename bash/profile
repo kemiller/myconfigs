@@ -5,6 +5,7 @@
 
 export PATH=~/bin:~/bin/depot_tools:~/.gem/ruby/1.8/bin:~/Applications/MacVim/Contents/MacOS:"~/Library/PLT Scheme v4.2.2/bin":/usr/local/bin:/usr/local/sbin:/opt/local/sbin:/opt/local/bin:/usr/local/mysql/bin:/usr/local/mzscheme/bin:/usr/local/cobra/bin:$PATH
 export MANPATH=/opt/local/man:$MANPATH
+export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:/usr/local/mysql/lib
 export COLORTERM=1 
 export EDITOR='mvim -v'
 export GREP_OPTIONS="--color=auto"
@@ -60,6 +61,7 @@ alias ovim="mvim --remote-tab"
 alias kicksilver="killall Quicksilver && open -a Quicksilver"
 alias vibp="gvim ~/.bash_profile"
 alias cap="cap -f ~/capistrano/Capfile"
+alias bouncewifi="sudo ifconfig en1 down && sudo ifconfig en1 up"
 
 alias killmergeinfo="svn propget -R svn:mergeinfo * | field 1 | xargs svn propdel svn:mergeinfo"
 

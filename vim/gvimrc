@@ -2,35 +2,31 @@
 "winpos 60 45
 "set lines=62 columns=120
 
-" set nomacatsui
-set encoding=utf-8
-"set termencoding=macroman
 "set guifont=Lucida_Sans_Typewriter_Regular:h14
 "set guifont=Bitstream\ Vera\ Sans\ Mono\ 12
 set guifont=Consolas:h16
+
+set encoding=utf-8
+"set termencoding=macroman
+"set nomacatsui
 "set transparency=5
+set antialias
 
 set hlsearch
 set guioptions-=T
 set guioptions+=c
+set noshowcmd " this causes performance problems
+
 "colorscheme inkpot
 "colorscheme midnight2
 "colorscheme vividchalk
 "colorscheme delek
 "colorscheme railscasts
 colorscheme liquidcarbon
-set antialias
-
-set noshowcmd " this causes performance problems
 
 " toggle search term highlighting -- handy when you want it,
 " irritating and distracting when you don't.
 nmap <D-u> :nohls<CR>
-
-" nmap _SF :set guifont=vt100:h10:cANSI<CR>
-" nmap _MF :set guifont=Lucida_Console:h11:cANSI<CR>
-" nmap _LF :set guifont=Lucida_Console:h13:cANSI<CR>
-" nmap <M-m> :simalt ~x<CR>
 
 " Force this to work, even with rails plugin
 nmap <silent> <D-{> :tabp<CR>
