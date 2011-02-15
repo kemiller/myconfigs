@@ -128,10 +128,10 @@ function con () {
 }
 
 function gd () {
-	pushd $RUBYROOT/gems/1.8/gems/$1 || pushd $RUBYROOT/gems/1.9.*/gems/$1 
+	pushd $RUBYROOT/gems/1.8/gems/$1 
 }
 
-complete -W '`\ls -1 $RUBYROOT/gems/1.8/gems $RUBYROOT/gems/1.9.*/gems`' gd
+complete -W '`\ls -1 $RUBYROOT/gems/1.8/gems`' gd
 
 function av () {
   cd $(project_dir)/app/views/$1

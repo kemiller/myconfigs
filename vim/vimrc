@@ -50,6 +50,7 @@ nmap _S /,<CR>bywdwwdw?,<CR>P/,<CR>l"0p
 augroup misc
 	" Make crontab -e work
 	autocmd BufRead,BufNewFile /private/tmp/crontab.* set nowritebackup backupcopy=yes
+	autocmd BufRead,BufNewFile *.rb set sw=2 ts=2 expandtab
 	autocmd BufRead,BufNewFile *.rhtml set sw=2 ts=2 expandtab
 	autocmd BufRead,BufNewFile *.yaml,*.yml set sw=2 ts=2 expandtab smartindent
 	autocmd BufRead,BufNewFile *.viki set smartindent ft=viki
