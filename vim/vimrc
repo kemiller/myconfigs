@@ -11,7 +11,7 @@ set showmatch
 set noexpandtab
 set printoptions=portrait:n,paper:letter
 set laststatus=2
-set statusline=%t\ (%{GitBranch()})\ %h%m%r%=%-14.(%l,%c%V%)\ %P
+set statusline=%t\ %{fugitive#statusline()}\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 set wildignore=.git,vendor,.svn,*~,*.swp,*.swo
 set switchbuf=usetab
 
