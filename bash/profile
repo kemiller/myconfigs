@@ -33,7 +33,7 @@ export GIT_PS1_SHOWDIRTYSTATE=true
 #export PS1='\[\033]0;\w $(__git_ps1 "(%s) ")\007\]\h \w $(__git_ps1 "(%s) ")$(git_dirty_flag)➔  '
 #export PS1='\[\033]0;\w $(__git_ps1 "(%s) ")\007\]\h \w $(__git_ps1 "(%s) ")➔  '
 #export PS1='\[\033]0;\w $(export GITPROMPT=`__git_ps1 "(%s) "`; echo $GITPROMPT)\007\]\h \w ${GITPROMPT}➔  '
-export PS1='$(gitprompt=`__git_ps1 "(%s) "`; echo "\[\033]0;\w $gitprompt\007\]\h \w ${gitprompt}➔  ")'
+export PS1='$(gitprompt=`__git_ps1 "(%s) "`; echo "\[\033]0;\w $gitprompt\007\]\h \w ${gitprompt}$(rvm-prompt u) ➔  ")'
 alias g='git'
 alias m='cd ~/main'
 alias gf="git fetch"

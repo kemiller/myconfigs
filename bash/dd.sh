@@ -12,6 +12,8 @@ alias rgrep="grep -r --include='*.rb'"
 
 export PATH=~/svn/capistrano:~/svn/utils/mac/fmscripts:$PATH
 
+alias r19="rvm use ruby-1.9.2-p136"
+
 alias tf='cd $(project_dir)/test/functional'
 alias tlf='cd $(project_dir)/test/legacy/functional'
 alias tu='cd $(project_dir)/test/unit'
@@ -56,7 +58,17 @@ for app in `\ls -1 ~/main`; do
 	alias $app="export APP=$app; a"
 done
 
-alias b="git checkout"
+function ia () 
+{ 
+    r19
+    function project_dir () 
+    { 
+        echo "$HOME/idauth"
+    };
+    a
+}
+
+
 complete -o bashdefault -o default -o nospace -F _git_branch b
 
 function ac () {
