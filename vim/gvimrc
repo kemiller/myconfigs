@@ -23,7 +23,9 @@ set noshowcmd " this causes performance problems
 "colorscheme delek
 "colorscheme railscasts
 "colorscheme liquidcarbon
-colorscheme default
+"colorscheme default
+set background=dark
+colorscheme solarized
 
 " toggle search term highlighting -- handy when you want it,
 " irritating and distracting when you don't.
