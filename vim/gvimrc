@@ -4,7 +4,7 @@
 
 "set guifont=Lucida_Sans_Typewriter_Regular:h14
 "set guifont=Bitstream\ Vera\ Sans\ Mono\ 12
-set guifont=Consolas:h14
+set guifont=Consolas:h18
 
 set encoding=utf-8
 "set termencoding=macroman
@@ -23,9 +23,9 @@ set noshowcmd " this causes performance problems
 "colorscheme delek
 "colorscheme railscasts
 "colorscheme liquidcarbon
-"colorscheme default
-set background=dark
-colorscheme solarized
+colorscheme default
+"set background=dark
+"colorscheme ir_dark
 
 " toggle search term highlighting -- handy when you want it,
 " irritating and distracting when you don't.
