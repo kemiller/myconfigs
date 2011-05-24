@@ -94,3 +94,12 @@ function shave_and_a_haircut() {
 if [[ -d /Users/ken/.ec2 ]] ; then source /Users/ken/.ec2/vars; fi
 if [[ -s /Users/ken/.rvm/scripts/rvm ]] ; then source /Users/ken/.rvm/scripts/rvm ; fi
 
+
+##
+# Your previous /Users/ken/.bash_profile file was backed up as /Users/ken/.bash_profile.macports-saved_2011-05-06_at_10:42:23
+##
+
+# MacPorts Installer addition on 2011-05-06_at_10:42:23: adding an appropriate PATH variable for use with MacPorts.
+export PATH=/opt/local/bin:/opt/local/sbin:$PATH
+# Finished adapting your PATH environment variable for use with MacPorts.
+
