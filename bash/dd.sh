@@ -38,6 +38,14 @@ function mong() {
 	(a ; mongrel_rails start -C config/mongrel/development.yml $* )
 }
 
+function ss() {
+	if [[ -e script/server ]]; then
+		script/server
+	elif [[ -e script/rails ]]; then
+		rails server
+	fi
+}
+
 function master_dir () {
 	echo "$HOME/main"
 }
