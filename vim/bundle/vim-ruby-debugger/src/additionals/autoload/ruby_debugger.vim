@@ -119,7 +119,7 @@ function! s:get_escaped_absolute_path(command)
     if !(has("win32") || has("win64"))
       let absolute_command = s:strip(system('which ' . relative_command))
     endif
-    if empty(absolute_command)
+    if absolute_command[0] != '/'
       let absolute_command = getcwd() . '/' . relative_command
     endif
     let absolute_path = "\"'" . absolute_command . "' " . arguments . '"'
@@ -434,7 +434,7 @@ let g:RubyDebugger.queue = s:Queue.new()
 function! RubyDebugger.start(...) dict
   call s:log("Executing :Rdebugger...")
   let g:RubyDebugger.server = s:Server.new(s:hostname, s:rdebug_port, s:debugger_port, s:runtime_dir, s:tmp_file, s:server_output_file)
-  let script_string = a:0 && !empty(a:1) ? a:1 : 'script/server webrick'
+  let script_string = a:0 && !empty(a:1) ? a:1 : g:ruby_debugger_default_script
   echo "Loading debugger..."
   call g:RubyDebugger.server.start(s:get_escaped_absolute_path(script_string))
 
@@ -1608,22 +1608,23 @@ endfunction
 
 
 " Log datetime and then message. It logs only if debug mode is enabled
-" TODO: Now to add one line to the log file, it read whole file to memory, add
-" one line and write all that stuff back to file. When log file is large, it
-" affects performance very much. Need to find way to write only to the end of
-" file (preferably - crossplatform way. Maybe Ruby?)
-function! s:Logger.put(string)
+" TODO It outputs a bunch of spaces at the front of the entry - fix that.
+function! s:Logger.put(string) dict
   if g:ruby_debugger_debug_mode
-    let file = readfile(self.file)
     let string = 'Vim plugin, ' . strftime("%H:%M:%S") . ': ' . a:string
-    call add(file, string)
-    call writefile(file, self.file)
+    exec 'redir >> ' . g:RubyDebugger.logger.file
+    silent call s:Logger.silent_echo(s:strip(string))
+    exec 'redir END'
   endif
 endfunction
 
+function! s:Logger.silent_echo(string)
+  echo a:string
+endfunction
+
 " *** Logger class (end)
-
-
+"
+"
 
 " *** Breakpoint class (start)
 
@@ -2015,6 +2016,9 @@ if !exists("g:ruby_debugger_cucumber_path")
 endif
 if !exists("g:ruby_debugger_progname")
   let g:ruby_debugger_progname = v:progname
+endif
+if !exists("g:ruby_debugger_default_script")
+  let g:ruby_debugger_default_script = 'script/server webrick'
 endif
 
 " Creating windows
