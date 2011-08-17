@@ -49,6 +49,8 @@ nmap gtf :tabe <cfile><CR>
 " Swap two items in a comma-separated list.  Needs some work
 nmap _S /,<CR>bywdwwdw?,<CR>P/,<CR>l"0p
 
+vmap __ :s/^/#/g
+
 augroup misc
 	" Make crontab -e work
 	autocmd BufRead,BufNewFile /private/tmp/crontab.* set nowritebackup backupcopy=yes
