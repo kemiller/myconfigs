@@ -56,8 +56,8 @@ alias epoch='date -j -f "%a %b %d %T %Z %Y" "`date`" "+%s"'
 
 alias vim=vi
 alias ls="ls -CFG"
-alias gvim="mvim"
-alias ovim="mvim --remote-tab"
+alias gvim="mvim --remote-tab-silent"
+alias ovim=gvim
 alias kicksilver="killall Quicksilver && open -a Quicksilver"
 alias vibp="gvim ~/.bash_profile"
 alias cap="cap -f ~/capistrano/Capfile"

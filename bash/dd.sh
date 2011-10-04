@@ -12,7 +12,7 @@ alias rgrep="grep -r --include='*.rb'"
 
 export PATH=~/svn/capistrano:~/svn/utils/mac/fmscripts:$PATH
 
-alias r19="rvm use ruby-1.9.2-p180"
+alias r19="rvm use ruby-1.9.2-p290"
 
 alias tf='cd $(project_dir)/test/functional'
 alias tlf='cd $(project_dir)/test/legacy/functional'

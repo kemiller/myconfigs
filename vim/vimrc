@@ -17,6 +17,11 @@ set statusline=%t\ %{fugitive#statusline()}\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 set wildignore=.git,vendor,.svn,*~,*.swp,*.swo
 set switchbuf=usetab
 
+if has("persistent_undo")
+    set undodir=~/.vimundo
+    set undofile
+endif
+
 filetype plugin indent on
 syntax on
 
