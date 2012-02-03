@@ -1,9 +1,15 @@
 
+##
+## Shell options
+##
+
+shopt -s cdspell
+
 ## 
 ## Environment
 ##
 
-export PATH=~/bin:~/bin/depot_tools:~/.gem/ruby/1.8/bin:~/Applications/MacVim/Contents/MacOS:"~/Library/PLT Scheme v4.2.2/bin":/usr/local/bin:/usr/local/sbin:/opt/local/sbin:/opt/local/bin:/usr/local/mysql/bin:/usr/local/mzscheme/bin:/usr/local/cobra/bin:$PATH
+export PATH=~/bin:~/bin/depot_tools:~/.gem/ruby/1.8/bin:~/Applications/MacVim/Contents/MacOS:"~/Library/PLT Scheme v4.2.2/bin":/opt/local/lib/postgresql91/bin:/usr/local/bin:/usr/local/sbin:/opt/local/sbin:/opt/local/bin:/usr/local/mysql/bin:/usr/local/mzscheme/bin:/usr/local/cobra/bin:$PATH
 export MANPATH=/opt/local/man:$MANPATH
 export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:/usr/local/mysql/lib
 export COLORTERM=1 
@@ -14,8 +20,11 @@ export PAGER="less $LESS"
 
 export RUBYROOT=/opt/local/lib/ruby
 
-# Load development helpers
-. ~/.config/bash/dd.sh
+if [[ -f ~/.local-profile ]]; then
+  . ~/.local-profile
+fi
+
+. ~/.config/bash/rails.sh
 
 # Automatic bash completion for MacPorts (including git and svn)
 if [ -f /opt/local/etc/bash_completion ]; then
@@ -33,24 +42,13 @@ export GIT_PS1_SHOWDIRTYSTATE=true
 #export PS1='\[\033]0;\w $(__git_ps1 "(%s) ")\007\]\h \w $(__git_ps1 "(%s) ")$(git_dirty_flag)➔  '
 #export PS1='\[\033]0;\w $(__git_ps1 "(%s) ")\007\]\h \w $(__git_ps1 "(%s) ")➔  '
 #export PS1='\[\033]0;\w $(export GITPROMPT=`__git_ps1 "(%s) "`; echo $GITPROMPT)\007\]\h \w ${GITPROMPT}➔  '
-export PS1='$(gitprompt=`__git_ps1 "(%s) "`; echo "\[\033]0;\w $gitprompt\007\]\h \w ${gitprompt}$(rvm-prompt u) ➔  ")'
+#export PS1='$(gitprompt=`__git_ps1 "(%s) "`; echo "\[\033]0;\w $gitprompt\007\]\h \w ${gitprompt}$(rvm-prompt u) ➔  ")'
+export PS1='$(gitprompt=`__git_ps1 "(%s) "`; echo "\[\033]0;\w $gitprompt\007\]\h \w ${gitprompt}➔  ")'
 alias g='git'
-alias m='cd ~/main'
 alias gf="git fetch"
 alias gpl="git pull"
 alias gps="git push"
 alias gm="git merge"
-
-function np () {
-	function project_dir () {
-		echo "$HOME/projects/nparty"
-	}
-	function am () {
-		cd $(project_dir)/app/models/$1
-	}
-	gemup
-	a
-}
 
 alias epoch='date -j -f "%a %b %d %T %Z %Y" "`date`" "+%s"'
 
@@ -60,10 +58,7 @@ alias gvim="mvim --remote-tab-silent"
 alias ovim=gvim
 alias kicksilver="killall Quicksilver && open -a Quicksilver"
 alias vibp="gvim ~/.bash_profile"
-alias cap="cap -f ~/capistrano/Capfile"
 alias bouncewifi="sudo ifconfig en1 down && sudo ifconfig en1 up"
-
-alias killmergeinfo="svn propget -R svn:mergeinfo * | field 1 | xargs svn propdel svn:mergeinfo"
 
 alias rslv="git status | grep unmerged | field 3 | xargs mvim -p"
 
@@ -100,6 +95,15 @@ if [[ -s /Users/ken/.rvm/scripts/rvm ]] ; then source /Users/ken/.rvm/scripts/rv
 ##
 
 # MacPorts Installer addition on 2011-05-06_at_10:42:23: adding an appropriate PATH variable for use with MacPorts.
+export PATH=/opt/local/bin:/opt/local/sbin:$PATH
+# Finished adapting your PATH environment variable for use with MacPorts.
+
+
+##
+# Your previous /Users/kmiller/.bash_profile file was backed up as /Users/kmiller/.bash_profile.macports-saved_2012-01-31_at_13:02:48
+##
+
+# MacPorts Installer addition on 2012-01-31_at_13:02:48: adding an appropriate PATH variable for use with MacPorts.
 export PATH=/opt/local/bin:/opt/local/sbin:$PATH
 # Finished adapting your PATH environment variable for use with MacPorts.
 
