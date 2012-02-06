@@ -16,6 +16,7 @@ function detect_rails_dir() {
   if [[ -f config/boot.rb && ( "$PROJECT_DIR" != "$(pwd)" ) ]]; then
     PROJECT_DIR="$(pwd)"
     setup_abbreviations
+    setup_test_completion
   fi
 }
 
@@ -65,9 +66,7 @@ function ts () {
 	file=`echo $1 | sed 's/.rb$//;'`
 	thefile=""
 
-	for i in $u/$1 $u/${1}_test $f/$1 $f/${1}_test $f/${1}_controller_test \
-			$lu/$1 $lu/${1}_test $lf/$1 $lf/${1}_test $lf/${1}_controller_test; do
-		#echo "Trying $i"
+	for i in $u/$1 $u/${1}_test $f/$1 $f/${1}_test $f/${1}_controller_test; do
 		if [ -e ${i}.rb ]; then
 			thefile=${i}.rb
 			break;
@@ -75,16 +74,15 @@ function ts () {
 	done
 	
 	if [ -n "$thefile" ]; then
-		${RAKE:-rake} test:units TEST="$thefile" TESTOPTS="$2 $3 $4"
-	elif [ "$1" = "f" ]; then
-		${RAKE:-rake} test:functionals
-	elif [ "$1" = "u" ]; then
-		${RAKE:-rake} test:units
-	elif [ "$1" = "i" ]; then
-		${RAKE:-rake} test:integration
+    (cd $(project_dir) && ${RAKE:-rake} test:units TEST="$thefile" TESTOPTS="$2 $3 $4")
 	else
 		echo "$1 not found"
 	fi
+}
+
+function setup_test_completion () {
+  complete -W "$(cd $(project_dir)/test/unit && find * -type f | sed 's/.rb$//;') \
+    $(cd $(project_dir)/test/functional && find * -type f | sed 's/.rb$//;')" ts
 }
 
 
@@ -106,5 +104,6 @@ complete -C ~/bin/rake_bash_complete -o default rake
 
 if [[ -n "$PROJECT_DIR" ]]; then
   setup_abbreviations
+  setup_test_completion
 fi
 
