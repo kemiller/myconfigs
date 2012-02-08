@@ -14,7 +14,7 @@ SCRIPT_ABBREVS="ss:server cn:console dbc:dbconsole gen:generate"
 
 function detect_rails_dir() {
   if [[ -f config/boot.rb && ( "$PROJECT_DIR" != "$(pwd)" ) ]]; then
-    PROJECT_DIR="$(pwd)"
+    export PROJECT_DIR="$(pwd)"
     setup_abbreviations
     setup_test_completion
   fi
@@ -22,11 +22,12 @@ function detect_rails_dir() {
 
 function project_dir () { 
   detect_rails_dir
-	echo $PROJECT_DIR
+  echo $PROJECT_DIR
 }
 
 function cd_to_subdir() {
-  cd $(project_dir)/$1/$2
+  detect_rails_dir
+  cd $PROJECT_DIR/$1/$2
 }
 
 function setup_abbreviations() {
@@ -43,11 +44,11 @@ function setup_abbreviations() {
 # Script Abstraction
 
 function smart_rails_script() {
-	if [[ -e script/$1 ]]; then
-		script/$*
-	elif [[ -e script/rails ]]; then
-		rails $*
-	fi
+  if [[ -e script/$1 ]]; then
+    (cd $(project_dir) && script/$*)
+  elif [[ -e script/rails ]]; then
+    (cd $(project_dir) && rails $*)
+  fi
 }
 
 alias srs="smart_rails_script"
@@ -55,29 +56,29 @@ alias srs="smart_rails_script"
 for pair in $SCRIPT_ABBREVS; do
   shortcut=$(echo $pair | cut -d: -f1)
   longcut=$(echo $pair | cut -d: -f2)
-  alias $shortcut="(cd $(project_dir) && smart_rails_script $longcut)"
+  alias $shortcut="smart_rails_script $longcut"
 done
 
 # Single Unit Testing
 
 function ts () {
-	u=$(project_dir)/test/unit
-	f=$(project_dir)/test/functional
-	file=`echo $1 | sed 's/.rb$//;'`
-	thefile=""
+u=$(project_dir)/test/unit
+f=$(project_dir)/test/functional
+file=`echo $1 | sed 's/.rb$//;'`
+thefile=""
 
-	for i in $u/$1 $u/${1}_test $f/$1 $f/${1}_test $f/${1}_controller_test; do
-		if [ -e ${i}.rb ]; then
-			thefile=${i}.rb
-			break;
-		fi
-	done
-	
-	if [ -n "$thefile" ]; then
-    (cd $(project_dir) && ${RAKE:-rake} test:units TEST="$thefile" TESTOPTS="$2 $3 $4")
-	else
-		echo "$1 not found"
-	fi
+for i in $u/$1 $u/${1}_test $f/$1 $f/${1}_test $f/${1}_controller_test; do
+  if [ -e ${i}.rb ]; then
+    thefile=${i}.rb
+    break;
+  fi
+done
+
+if [ -n "$thefile" ]; then
+  (cd $(project_dir) && ${RAKE:-rake} test:units TEST="$thefile" TESTOPTS="$2 $3 $4")
+else
+  echo "$1 not found"
+fi
 }
 
 function setup_test_completion () {
@@ -89,7 +90,7 @@ function setup_test_completion () {
 # Misc
 
 function gd () {
-	pushd $RUBYROOT/gems/1.8/gems/$1 
+pushd $RUBYROOT/gems/1.8/gems/$1 
 }
 complete -W '`\ls -1 $RUBYROOT/gems/1.8/gems`' gd
 
@@ -99,6 +100,7 @@ alias ber="bundle exec rake"
 alias bev="bundle exec vagrant"
 
 alias rgrep="grep -r --include='*.rb'"
+alias rack="ack --ruby"
 
 complete -C ~/bin/rake_bash_complete -o default rake
 
