@@ -10,9 +10,9 @@ Installation
 
 Install to `~/.vim/autoload/pathogen.vim`.  Or copy and paste:
 
-    mkdir -p ~/.vim/autoload ~/.vim/bundle
-    curl https://raw.github.com/tpope/vim-pathogen/HEAD/autoload/pathogen.vim \
-      > ~/.vim/autoload/pathogen.vim
+    mkdir -p ~/.vim/autoload ~/.vim/bundle; \
+    curl -so ~/.vim/autoload/pathogen.vim \
+        https://raw.github.com/tpope/vim-pathogen/HEAD/autoload/pathogen.vim
 
 If you don't have `curl`, use `wget -O -` instead.
 
@@ -71,7 +71,7 @@ Runtime File Editing
 --------------------
 
 As a guy who writes a lot of Vim script, I edit a lot of runtime files.
-For example, when editing a PDF file like I do every day, I might notice
+For example, when editing PDF files like I do every day, I might notice
 something weird in the syntax highlighting and want to have a look:
 
     :sp $VIMRUNTIME/syntax/pdf.vim
@@ -103,8 +103,9 @@ Here's the full list of commands:
 * `:Vpedit`
 * `:Vread`
 
-There's also `:Vopen`, which is like `:Vedit` but does an `:lcd` to the
-containing runtime directory first.
+All but `:Vedit` automatically `:lcd` to the target's runtime path.  To
+suppress that behavior, use a `!`, and to `:lcd` with `:Vedit`, use
+`:Vopen` instead.
 
 FAQ
 ---
@@ -114,7 +115,11 @@ FAQ
 Sure, stick it under `~/.vim/bundle`, and prepend the following to your
 vimrc:
 
-    source ~/.vim/bundle/vim-pathogen/autoload/pathogen.vim
+    runtime bundle/vim-pathogen/autoload/pathogen.vim
+
+Or if your bundles are somewhere other than `~/.vim` (say, `~/src/vim`):
+
+    source ~/src/vim/bundle/vim-pathogen/autoload/pathogen.vim
 
 > Will you accept these 14 pull requests adding a `.gitignore` for
 > `tags` so I don't see untracked changes in my dot files repository?
@@ -143,9 +148,9 @@ If your [commit message sucks](http://stopwritingramblingcommitmessages.com/),
 I'm not going to accept your pull request.  I've explained very politely
 dozens of times that
 [my general guidelines](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
-are absolute rules on on my own repositories, so I may lack the energy
-to explain it to you yet another time.  And please, if I ask you to
-change something, `git commit --amend`.
+are absolute rules on my own repositories, so I may lack the energy to
+explain it to you yet another time.  And please, if I ask you to change
+something, `git commit --amend`.
 
 Beyond that, don't be shy about asking before patching.  What takes you
 hours might take me minutes simply because I have both domain knowledge
@@ -167,4 +172,5 @@ you're feeling especially charitable, follow [tpope](http://tpo.pe/) on
 License
 -------
 
-Distributable under the same terms as Vim itself.  See `:help license`.
+Copyright (c) Tim Pope.  Distributed under the same terms as Vim itself.
+See `:help license`.

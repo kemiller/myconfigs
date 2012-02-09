@@ -10,8 +10,9 @@ function! RubyDebugger.start(...) dict
   call s:log("Executing :Rdebugger...")
   let g:RubyDebugger.server = s:Server.new(s:hostname, s:rdebug_port, s:debugger_port, s:runtime_dir, s:tmp_file, s:server_output_file)
   let script_string = a:0 && !empty(a:1) ? a:1 : g:ruby_debugger_default_script
+  let params = a:0 && a:0 > 1 && !empty(a:2) ? a:2 : []
   echo "Loading debugger..."
-  call g:RubyDebugger.server.start(s:get_escaped_absolute_path(script_string))
+  call g:RubyDebugger.server.start(s:get_escaped_absolute_path(script_string), params)
 
   let g:RubyDebugger.exceptions = []
   for breakpoint in g:RubyDebugger.breakpoints
@@ -30,6 +31,12 @@ function! RubyDebugger.stop() dict
   endif
 endfunction
 
+function! RubyDebugger.is_running()
+  if has_key(g:RubyDebugger, 'server')
+    return g:RubyDebugger.server.is_running()
+  endif
+  return 0
+endfunction
 
 " This function receives commands from the debugger. When ruby_debugger.rb
 " gets output from rdebug-ide, it writes it to the special file and 'kick'
@@ -260,7 +267,7 @@ function! RubyDebugger.run_test() dict
   elseif file =~ '\.feature$'
     call g:RubyDebugger.start(g:ruby_debugger_cucumber_path . ' ' . file)
   elseif file =~ '_test\.rb$'
-    call g:RubyDebugger.start(file)
+    call g:RubyDebugger.start(file, ['-Itest'])
   endif
 endfunction
 

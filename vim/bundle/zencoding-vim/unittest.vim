@@ -88,16 +88,16 @@ function! s:testMoveNextPrev()
   endif
 endfunction
 
-if exists('g:user_zen_settings')
-  let g:user_zen_settings = s:old_user_zen_settings
-endif
-
 let oldmore = &more
 let &more = 0
 
 call s:testExpandAbbr()
 call s:testImageSize()
 call s:testMoveNextPrev()
+
+if exists('g:user_zen_settings')
+  let g:user_zen_settings = s:old_user_zen_settings
+endif
 
 let &more=oldmore
 echo "done"
@@ -434,7 +434,7 @@ finish
       'name': "fs:n",
       'query': "fs:n",
       'type': "css",
-      'result': "font-style:normal;",
+      'result': "font-style: normal;",
     },
     {
       'name': "fl:l|fc",
@@ -446,7 +446,7 @@ finish
       'name': "bg+",
       'query': "bg+",
       'type': "css",
-      'result': "background:#FFF url() 0 0 no-repeat;",
+      'result': "background: #FFF url() 0 0 no-repeat;",
     },
   ],
 },
@@ -493,6 +493,17 @@ finish
       'query': "ap>wp",
       'type': "xsl",
       'result': "<xsl:apply-templates select=\"\" mode=\"\">\n\t<xsl:with-param select=\"\" name=\"\"></xsl:with-param>\n</xsl:apply-templates>\n",
+    },
+  ],
+},
+{
+  'category': 'xsd',
+  'tests': [
+    {
+      'name': "w3c",
+      'query': "xsd:w3c",
+      'type': "xsd",
+      'result': "<?xml version=\"1.0\"?>\n<xsd:schema xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n\t<xsd:element name=\"\" type=\"\"/>\n</xsd:schema>",
     },
   ],
 },
