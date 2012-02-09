@@ -19,7 +19,7 @@ setlocal nosmartindent
 " Now, set up our indentation expression and keys that trigger it.
 setlocal indentexpr=GetRubyIndent(v:lnum)
 setlocal indentkeys=0{,0},0),0],!^F,o,O,e
-setlocal indentkeys+==end,=elsif,=when,=ensure,=rescue,==begin,==end
+setlocal indentkeys+==end,=else,=elsif,=when,=ensure,=rescue,==begin,==end
 
 " Only define the function once.
 if exists("*GetRubyIndent")
@@ -278,7 +278,7 @@ function GetRubyIndent(...)
             \ strpart(line, col('.') - 1, 2) !~ 'do'
         let ind = virtcol('.') - 1
       else
-        let ind = indent('.')
+        let ind = indent(s:GetMSL(line('.')))
       endif
     endif
     return ind
@@ -311,7 +311,7 @@ function GetRubyIndent(...)
 
   " If the previous line ended with a block opening, add a level of indent.
   if s:Match(lnum, s:block_regex)
-    return indent(lnum) + &sw
+    return indent(s:GetMSL(lnum)) + &sw
   endif
 
   " If the previous line contained an opening bracket, and we are still in it,
