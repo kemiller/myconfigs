@@ -1,5 +1,8 @@
 "source $VIMRUNTIME/vimrc_example.vim
 
+" this has to go before the colorscheme call
+:autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red 
+
 runtime macros/matchit.vim 
 
 call pathogen#runtime_append_all_bundles() 
@@ -104,5 +107,6 @@ augroup rails
 
 augroup END
 
-
-
+" Highlight trailing whitespace
+:au InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+:au InsertLeave * match ExtraWhitespace /\s\+$/
