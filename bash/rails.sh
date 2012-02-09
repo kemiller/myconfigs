@@ -31,13 +31,17 @@ function cd_to_subdir() {
 }
 
 function setup_abbreviations() {
+
   for pair in $DIR_ABBREVS; do
+
     shortcut=$(echo $pair | cut -d: -f1)
     longcut=$(echo $pair | cut -d: -f2)
+
     if [[ -d $(project_dir)/$longcut ]]; then
-      alias $shortcut="cd_to_subdir $longcut"
+      eval "function $shortcut () { cd_to_subdir $longcut; }; typeset -x $shortcut"
       complete -W "$(cd $(project_dir)/$longcut && find * -type d)" $shortcut
     fi
+
   done
 }
 
