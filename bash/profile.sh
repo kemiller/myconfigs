@@ -58,7 +58,7 @@ function my-rvm-prompt() {
 }
 
 function my-git-prompt() {
-  if which __git_ps1 > /dev/null 2>&1; then
+  if [[ `type -t __git_ps1` == 'function' ]]; then
     __git_ps1 " (%s)"
   fi
 }
