@@ -58,4 +58,4 @@ vim_org_scripts.each do |name, script_id, script_type|
   end
 end
 
-system "cd #{bundles_dir}/Command-T && rake make"
+system "cd Command-T && PATH=/usr/bin rake make"
