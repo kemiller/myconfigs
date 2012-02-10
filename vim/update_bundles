@@ -24,6 +24,7 @@ git_bundles = %w[
   git://github.com/vim-ruby/vim-ruby.git
   git://github.com/wincent/Command-T
   git://github.com/mattn/zencoding-vim.git
+  git://github.com/juvenn/mustache.vim.git
 ]
 
 vim_org_scripts = [
@@ -57,3 +58,4 @@ vim_org_scripts.each do |name, script_id, script_type|
   end
 end
 
+system "cd #{bundles_dir}/Command-T && rake make"
