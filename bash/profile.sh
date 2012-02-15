@@ -16,7 +16,6 @@ BASH_CONFIG_DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
 PATH="/usr/local/sbin:$PATH"
 PATH="/usr/local/bin:$PATH"
-PATH="~/bin:$PATH"
 export PATH
 
 export COLORTERM=1 
@@ -35,6 +34,9 @@ fi
 if [[ -f ~/.local-profile ]]; then
   . ~/.local-profile
 fi
+
+# make sure this is always first
+PATH="$HOME/bin:$PATH"
 
 # Automatic bash completion for MacPorts
 if [[ -f /opt/local/etc/bash_completion ]]; then
