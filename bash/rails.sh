@@ -48,9 +48,9 @@ function setup_abbreviations() {
 # Script Abstraction
 
 function smart_rails_script() {
-  if [[ -e script/$1 ]]; then
+  if [[ -e $(project_dir)/script/$1 ]]; then
     (cd $(project_dir) && script/$*)
-  elif [[ -e script/rails ]]; then
+  elif [[ -e $(project_dir)/script/rails ]]; then
     (cd $(project_dir) && rails $*)
   fi
 }
@@ -66,35 +66,42 @@ done
 # Single Unit Testing
 
 function ts () {
-u=$(project_dir)/test/unit
-f=$(project_dir)/test/functional
-file=`echo $1 | sed 's/.rb$//;'`
-thefile=""
+  u=$(project_dir)/test/unit
+  f=$(project_dir)/test/functional
+  file=`echo $1 | sed 's/.rb$//;'`
+  thefile=""
 
-for i in $u/$1 $u/${1}_test $f/$1 $f/${1}_test $f/${1}_controller_test; do
-  if [ -e ${i}.rb ]; then
-    thefile=${i}.rb
-    break;
+  for i in $u/$1 $u/${1}_test $f/$1 $f/${1}_test $f/${1}_controller_test; do
+    if [ -e ${i}.rb ]; then
+      thefile=${i}.rb
+      break;
+    fi
+  done
+
+  if [ -n "$thefile" ]; then
+    echo running $thefile
+    (cd $(project_dir) && ${RAKE:-rake} test:units TEST="$thefile" TESTOPTS="$2 $3 $4")
+  else
+    echo "$1 not found"
   fi
-done
+}
 
-if [ -n "$thefile" ]; then
-  (cd $(project_dir) && ${RAKE:-rake} test:units TEST="$thefile" TESTOPTS="$2 $3 $4")
-else
-  echo "$1 not found"
-fi
+function list_ruby_files_in_dir () {
+  if [[ -d "$1" ]]; then
+    cd "$1" && find * -type f | sed 's/.rb$//;'
+  fi
 }
 
 function setup_test_completion () {
-  complete -W "$(cd $(project_dir)/test/unit && find * -type f | sed 's/.rb$//;') \
-    $(cd $(project_dir)/test/functional && find * -type f | sed 's/.rb$//;')" ts
+complete -W "$(list_ruby_files_in_dir $(project_dir)/test/unit) \
+  $(list_ruby_files_in_dir $(project_dir)/test/functional)" ts
 }
 
 
 # Misc
 
 function gd () {
-pushd $RUBYROOT/gems/1.8/gems/$1 
+  pushd $RUBYROOT/gems/1.8/gems/$1
 }
 complete -W '`\ls -1 $RUBYROOT/gems/1.8/gems`' gd
 
