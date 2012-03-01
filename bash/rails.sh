@@ -57,6 +57,16 @@ function smart_rails_script() {
 
 alias srs="smart_rails_script"
 
+function smart_rake() {
+  if [[ -f Gemfile ]]; then
+    bundle exec rake
+  else
+    rake
+  fi
+}
+
+alias rake="smart_rake"
+
 for pair in $SCRIPT_ABBREVS; do
   shortcut=$(echo $pair | cut -d: -f1)
   longcut=$(echo $pair | cut -d: -f2)
@@ -80,7 +90,7 @@ function ts () {
 
   if [ -n "$thefile" ]; then
     echo running $thefile
-    (cd $(project_dir) && ${RAKE:-rake} test:units TEST="$thefile" TESTOPTS="$2 $3 $4")
+    (cd $(project_dir) && ${RAKE:-smart_rake} test:units TEST="$thefile" TESTOPTS="$2 $3 $4")
   else
     echo "$1 not found"
   fi
