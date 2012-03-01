@@ -59,9 +59,9 @@ alias srs="smart_rails_script"
 
 function smart_rake() {
   if [[ -f Gemfile ]]; then
-    bundle exec rake
+    bundle exec rake $*
   else
-    rake
+    \rake $*
   fi
 }
 
