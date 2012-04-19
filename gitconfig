@@ -34,3 +34,11 @@
 [user]
 	name = Ken Miller
 	email = ken@bitfield.net
+[core]
+	excludesfile = /Users/kmiller/.gitignore_global
+[difftool "sourcetree"]
+	cmd = /Applications/p4merge.app/Contents/MacOS/p4merge \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/p4merge.app/Contents/MacOS/p4merge \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"
+	trustExitCode = true
