@@ -51,11 +51,19 @@ function smart_rails_script() {
   if [[ -e $(project_dir)/script/$1 ]]; then
     (cd $(project_dir) && script/$*)
   elif [[ -e $(project_dir)/script/rails ]]; then
-    (cd $(project_dir) && rails $*)
+    (cd $(project_dir) && smart_rails $*)
   fi
 }
 
 alias srs="smart_rails_script"
+
+function smart_ruby() {
+  if [[ -f Gemfile ]]; then
+    bundle exec ruby $*
+  else
+    \ruby $*
+  fi
+}
 
 function smart_rake() {
   if [[ -f Gemfile ]]; then
@@ -66,6 +74,16 @@ function smart_rake() {
 }
 
 alias rake="smart_rake"
+
+function smart_rails() {
+  if [[ -f Gemfile ]]; then
+    bundle exec rails $*
+  else
+    \rails $*
+  fi
+}
+
+alias rails="smart_rails"
 
 for pair in $SCRIPT_ABBREVS; do
   shortcut=$(echo $pair | cut -d: -f1)
@@ -90,7 +108,11 @@ function ts () {
 
   if [ -n "$thefile" ]; then
     echo running $thefile
-    (cd $(project_dir) && ${RAKE:-smart_rake} test:units TEST="$thefile" TESTOPTS="$2 $3 $4")
+    if [ -n "$LITE_RAILS_TEST" ]; then
+      (cd $(project_dir) && ${RAKE:-smart_ruby} "$thefile" $2 $3 $4)
+    else
+      (cd $(project_dir) && ${RAKE:-smart_rake} test:units TEST="$thefile" TESTOPTS="$2 $3 $4")
+    fi
   else
     echo "$1 not found"
   fi
