@@ -169,6 +169,7 @@ command! -n=0 -bar NERDTreeClose :call s:closeTreeIfOpen()
 command! -n=1 -complete=customlist,s:completeBookmarks -bar NERDTreeFromBookmark call s:initNerdTree('<args>')
 command! -n=0 -bar NERDTreeMirror call s:initNerdTreeMirror()
 command! -n=0 -bar NERDTreeFind call s:findAndRevealPath()
+command! -n=0 -bar NERDTreeFocus call NERDTreeFocus()
 " SECTION: Auto commands {{{1
 "============================================================
 augroup NERDTree
@@ -1210,6 +1211,8 @@ function! s:TreeFileNode.makeRoot()
     if g:NERDTreeChDirMode ==# 2
         exec "cd " . b:NERDTreeRoot.path.str({'format': 'Edit'})
     endif
+
+    silent doautocmd User NERDTreeNewRoot
 endfunction
 "FUNCTION: TreeFileNode.New(path) {{{3
 "Returns a new TreeNode object with the given path and parent
@@ -1229,7 +1232,6 @@ endfunction
 
 "FUNCTION: TreeFileNode.open() {{{3
 function! s:TreeFileNode.open(...)
-    echomsg self.path.str()
     let opts = a:0 ? a:1 : {}
     let opener = s:Opener.New(self.path, opts)
     call opener.open(self)
@@ -2075,6 +2077,10 @@ function! s:Opener._openDirectory(node)
             call s:initNerdTreeInPlace(a:node.path.str())
         endif
     endif
+
+    if self._stay
+        call self._restoreCursorPos()
+    endif
 endfunction
 
 "FUNCTION: Opener._previousWindow() {{{3
@@ -2088,7 +2094,6 @@ function! s:Opener._previousWindow()
             else
                 call s:exec('wincmd p')
             endif
-            exec ("edit " . self._path.str({'format': 'Edit'}))
         catch /^Vim\%((\a\+)\)\=:E37/
             call s:putCursorInTreeWin()
             throw "NERDTree.FileAlreadyOpenAndModifiedError: ". self._path.str() ." is already open and modified."
@@ -2888,6 +2893,10 @@ function! s:createDefaultBindings()
     call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapPreviewVSplit, 'scope': "Node", 'callback': s."previewNodeVSplit" })
     call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapPreviewSplit, 'scope': "Node", 'callback': s."previewNodeHSplit" })
 
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapPreview, 'scope': "Bookmark", 'callback': s."previewNodeCurrent" })
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapPreviewVSplit, 'scope': "Bookmark", 'callback': s."previewNodeVSplit" })
+    call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapPreviewSplit, 'scope': "Bookmark", 'callback': s."previewNodeHSplit" })
+
     call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapOpenRecursively, 'scope': "DirNode", 'callback': s."openNodeRecursively" })
 
     call NERDTreeAddKeyMap({ 'key': g:NERDTreeMapUpdir, 'scope': "all", 'callback': s."upDirCurrentRootClosed" })
@@ -3045,11 +3054,12 @@ function! s:initNerdTree(name)
     let b:NERDTreeShowHidden = g:NERDTreeShowHidden
     let b:NERDTreeShowBookmarks = g:NERDTreeShowBookmarks
     let b:NERDTreeRoot = newRoot
-
     let b:NERDTreeType = "primary"
 
     call s:renderView()
     call b:NERDTreeRoot.putCursorHere(0, 0)
+
+    silent doautocmd User NERDTreeInit
 endfunction
 
 "FUNCTION: s:initNerdTreeInPlace(dir) {{{2
@@ -3079,6 +3089,8 @@ function! s:initNerdTreeInPlace(dir)
     let b:NERDTreeType = "secondary"
 
     call s:renderView()
+
+    silent doautocmd User NERDTreeInit
 endfunction
 " FUNCTION: s:initNerdTreeMirror() {{{2
 function! s:initNerdTreeMirror()
@@ -3254,6 +3266,14 @@ endfunction
 
 function! NERDTreeRender()
     call s:renderView()
+endfunction
+
+function! NERDTreeFocus()
+    if s:isTreeOpen()
+        call s:putCursorInTreeWin()
+    else
+        call s:toggle("")
+    endif
 endfunction
 
 " SECTION: View Functions {{{1

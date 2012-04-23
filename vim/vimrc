@@ -1,7 +1,7 @@
 "source $VIMRUNTIME/vimrc_example.vim
 
 " this has to go before the colorscheme call
-:autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red 
+":autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red 
 
 runtime macros/matchit.vim 
 
@@ -108,5 +108,6 @@ augroup rails
 augroup END
 
 " Highlight trailing whitespace
-:au InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
-:au InsertLeave * match ExtraWhitespace /\s\+$/
+":au InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+":au InsertLeave * match ExtraWhitespace /\s\+$/
+set list listchars=trail:⨆,tab:>-
