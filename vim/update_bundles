@@ -2,7 +2,6 @@
 
 git_bundles = %w[ 
   git://github.com/astashov/vim-ruby-debugger.git
-  git://github.com/kemiller/vim-ir_black.git
   git://github.com/msanders/snipmate.vim.git
   git://github.com/scrooloose/nerdtree.git
   git://github.com/timcharper/textile.vim.git
@@ -21,6 +20,7 @@ git_bundles = %w[
   git://github.com/tsaleh/vim-shoulda.git
   git://github.com/tsaleh/vim-supertab.git
   git://github.com/tsaleh/vim-tcomment.git
+  git://github.com/twerth/ir_black.git
   git://github.com/vim-ruby/vim-ruby.git
   git://github.com/wincent/Command-T
   git://github.com/mattn/zencoding-vim.git

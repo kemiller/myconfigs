@@ -1,7 +1,7 @@
 "=============================================================================
 " zencoding.vim
 " Author: Yasuhiro Matsumoto <mattn.jp@gmail.com>
-" Last Change: 23-Apr-2012.
+" Last Change: 24-Apr-2012.
 
 let s:save_cpo = &cpo
 set cpo&vim
@@ -66,12 +66,12 @@ function! s:zen_parseIntoTree(abbr, type)
     let rabbr = s:zen_getExpandos(type, abbr)
     if rabbr == abbr
       " try 'foo+(' to (foo-x)
-      let rabbr = substitute(abbr, '\%(+\|^\)\([a-zA-Z][a-zA-Z0-9+]\+\)+\([()]\|$\)', '\="(".s:zen_getExpandos(type, submatch(1)).")".submatch(2)', 'i')
+      let rabbr = substitute(abbr, '\%(+\|^\)\([a-zA-Z][a-zA-Z0-9+]\+\)+\([(){}>]\|$\)', '\="(".s:zen_getExpandos(type, submatch(1)).")".submatch(2)', 'i')
     endif
     let abbr = rabbr
-    let mx = '\([+>]\|<\+\)\{-}\s*\((*\)\{-}\s*\([@#.]\{-}[a-zA-Z\!][a-zA-Z0-9:_\!\-$]*\|{.\+}\)\(\%(\%(#{[{}a-zA-Z0-9_\-\$]\+\|#[a-zA-Z0-9_\-\$]\+\)\|\%(\[[^\]]\+\]\)\|\%(\.{[{}a-zA-Z0-9_\-\$]\+\|\.[a-zA-Z0-9_\-\$]\+\)\)*\)\%(\({[^}]\+}\)\)\{0,1}\%(\s*\*\s*\([0-9]\+\)\s*\)\{0,1}\(\%(\s*)\%(\s*\*\s*[0-9]\+\s*\)\{0,1}\)*\)'
+    let mx = '\([+>]\|<\+\)\{-}\s*\((*\)\{-}\s*\([@#.]\{-}[a-zA-Z\!][a-zA-Z0-9:_\!\-$]*\|{.\{-}}\)\(\%(\%(#{[{}a-zA-Z0-9_\-\$]\+\|#[a-zA-Z0-9_\-\$]\+\)\|\%(\[[^\]]\+\]\)\|\%(\.{[{}a-zA-Z0-9_\-\$]\+\|\.[a-zA-Z0-9_\-\$]\+\)\)*\)\%(\({[^}]\+}\)\)\{0,1}\%(\s*\*\s*\([0-9]\+\)\s*\)\{0,1}\(\%(\s*)\%(\s*\*\s*[0-9]\+\s*\)\{0,1}\)*\)'
   else
-    let mx = '\([+>]\|<\+\)\{-}\s*\((*\)\{-}\s*\([@#.]\{-}[a-zA-Z\!][a-zA-Z0-9:_\!\+\-]*\|{.\+}\)\(\%(\%(#{[{}a-zA-Z0-9_\-\$]\+\|#[a-zA-Z0-9_\-\$]\+\)\|\%(\[[^\]]\+\]\)\|\%(\.{[{}a-zA-Z0-9_\-\$]\+\|\.[a-zA-Z0-9_\-\$]\+\)\)*\)\%(\({[^}]\+}\)\)\{0,1}\%(\s*\*\s*\([0-9]\+\)\s*\)\{0,1}\(\%(\s*)\%(\s*\*\s*[0-9]\+\s*\)\{0,1}\)*\)'
+    let mx = '\([+>]\|<\+\)\{-}\s*\((*\)\{-}\s*\([@#.]\{-}[a-zA-Z\!][a-zA-Z0-9:_\!\+\-]*\|{.\{-}}\)\(\%(\%(#{[{}a-zA-Z0-9_\-\$]\+\|#[a-zA-Z0-9_\-\$]\+\)\|\%(\[[^\]]\+\]\)\|\%(\.{[{}a-zA-Z0-9_\-\$]\+\|\.[a-zA-Z0-9_\-\$]\+\)\)*\)\%(\({[^}]\+}\)\)\{0,1}\%(\s*\*\s*\([0-9]\+\)\s*\)\{0,1}\(\%(\s*)\%(\s*\*\s*[0-9]\+\s*\)\{0,1}\)*\)'
   endif
   let root = { 'name': '', 'attr': {}, 'child': [], 'snippet': '', 'multiplier': 1, 'parent': {}, 'value': '', 'pos': 0, 'important': 0 }
   let parent = root
@@ -658,11 +658,11 @@ function! s:zen_getFileType()
   if synIDattr(synID(line("."), col("."), 1), "name") =~ '^html'
     let type = 'html'
   endif
-  if synIDattr(synID(line("."), col("."), 1), "name") =~ '^xml'
-    let type = 'xml'
-  endif
   if synIDattr(synID(line("."), col("."), 1), "name") =~ '^javaScript'
     let type = 'javascript'
+  endif
+  if len(type) == 0 && synIDattr(synID(line("."), col("."), 1), "name") =~ '^xml'
+    let type = 'xml'
   endif
   if len(type) == 0 | let type = 'html' | endif
   return type
@@ -711,6 +711,11 @@ function! zencoding#expandAbbr(mode) range
         let expand = substitute(expand, '\$line'.(n-a:firstline+1).'\$', lpart, 'g')
       endfor
       let expand = substitute(expand, '\$line\d*\$', '', 'g')
+      let content = join(getline(a:firstline, a:lastline), "\n")
+      if stridx(expand, '$#') < len(expand)-2
+        let expand = substitute(expand, '^\(.*\)\$#\s*$', '\1', '')
+      endif
+      let expand = substitute(expand, '\$#', content, 'g')
     else
       let str = ''
       if visualmode() ==# 'V'
@@ -2143,6 +2148,7 @@ let s:zen_settings = {
 \            'var': 'xsl:variable',
 \            'vari': 'xsl:variable',
 \            'if': 'xsl:if',
+\            'choose': 'xsl:choose',
 \            'call': 'xsl:call-template',
 \            'wp': 'xsl:with-param',
 \            'par': 'xsl:param',
