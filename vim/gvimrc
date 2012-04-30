@@ -26,7 +26,8 @@ set noshowcmd " this causes performance problems
 "colorscheme default
 "set background=dark
 "colorscheme ir_dark
-colorscheme proton
+"colorscheme proton
+colorscheme IR_White
 "colorscheme mayansmoke
 
 " toggle search term highlighting -- handy when you want it,

@@ -29,9 +29,8 @@ git_bundles = %w[
 
 vim_org_scripts = [
   ["IndexedSearch", "7062",  "plugin"],
-  ["jquery",        "12107", "syntax"],
-  ["proton",        "2510",  "colors"],
-  ["mayansmoke",    "3065",  "colors"]
+  ["proton",        "9818",  "colors"],
+  ["mayansmoke",    "14049",  "colors"]
 ]
 
 require 'fileutils'
