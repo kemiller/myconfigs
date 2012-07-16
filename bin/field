@@ -1,7 +1,10 @@
 #!/usr/bin/env ruby 
 
+indices = ARGV.collect { |a| a.split(/[, ]/).collect { |i| i.to_i-1 } }.flatten
+
 while line = $stdin.gets
-	puts line.split[ARGV[0].to_i-1]
+  arr = line.split
+  puts indices.collect { |i| arr[i] }.join(',') rescue break
 end
 
 
