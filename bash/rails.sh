@@ -7,15 +7,15 @@
 DIR_ABBREVS="a: ac:app/controllers am:app/models aa:app/admin ah:app/helpers"
 DIR_ABBREVS="$DIR_ABBREVS tf:test/functional tu:test/unit ti:test/integration"
 DIR_ABBREVS="$DIR_ABBREVS db:db mg:db/migrate tc:test/factories lb:lib av:app/views"
+DIR_ABBREVS="$DIR_ABBREVS aw:app/workers"
 
 SCRIPT_ABBREVS="ss:server cn:console dbc:dbconsole gen:generate"
 
 # Rails Directory Navigation
 
 function detect_rails_dir() {
-  if [[ -f config/boot.rb && ( "$PROJECT_DIR" != "$(pwd)" ) ]]; then
+  if [[ -f config/boot.rb && ( "$(pwd)" =~ /^$PROJECT_DIR/ ) ]]; then
     export PROJECT_DIR="$(pwd)"
-    setup_abbreviations
     setup_test_completion
   fi
 }
@@ -147,8 +147,9 @@ alias rack="ack --ruby"
 
 complete -C ~/bin/rake_bash_complete -o default rake
 
+setup_abbreviations
+
 if [[ -n "$PROJECT_DIR" ]]; then
-  setup_abbreviations
   setup_test_completion
 fi
 
