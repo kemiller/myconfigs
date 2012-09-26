@@ -41,7 +41,9 @@ PATH="$HOME/bin:$PATH"
 # Automatic bash completion for MacPorts
 if [[ -f /opt/local/etc/bash_completion ]]; then
 	. /opt/local/etc/bash_completion
-else
+fi
+
+if [[ `type -t __git_ps1` != 'function' ]]; then
 	. $BASH_CONFIG_DIR/git-completion.bash
 fi
 
