@@ -14,20 +14,30 @@ SCRIPT_ABBREVS="ss:server cn:console dbc:dbconsole gen:generate"
 # Rails Directory Navigation
 
 function detect_rails_dir() {
-  if [[ -f config/boot.rb && ( "$(pwd)" =~ /^$PROJECT_DIR/ ) ]]; then
+  if [[ -f config/boot.rb && ! ( "$(pwd)" =~ /^$PROJECT_DIR/ ) ]]; then
     export PROJECT_DIR="$(pwd)"
     setup_test_completion
   fi
 }
 
 function project_dir () { 
-  detect_rails_dir
   echo $PROJECT_DIR
 }
 
 function cd_to_subdir() {
-  detect_rails_dir
   cd $PROJECT_DIR/$1/$2
+}
+
+function abbreviation_complete {
+  for pair in $DIR_ABBREVS; do
+    shortcut=$(echo $pair | cut -d: -f1)
+    if [ "$1" == "$shortcut" ]; then
+      longcut=$(echo $pair | cut -d: -f2)
+      cd_to_subdir $longcut || return 1
+      COMPREPLY=( `find $2* -type d` )
+      return
+    fi
+  done
 }
 
 function setup_abbreviations() {
@@ -38,57 +48,28 @@ function setup_abbreviations() {
     longcut=$(echo $pair | cut -d: -f2)
 
     if [[ -d $(project_dir)/$longcut ]]; then
-      eval "function $shortcut () { cd_to_subdir $longcut; }; typeset -x $shortcut"
-      complete -W "$(cd $(project_dir)/$longcut && find * -type d)" $shortcut
+      alias $shortcut="cd_to_subdir $longcut"
+      complete -F abbreviation_complete $shortcut
     fi
 
   done
 }
 
-# Script Abstraction
-
-function smart_rails_script() {
-  if [[ -e $(project_dir)/script/$1 ]]; then
-    (cd $(project_dir) && script/$*)
-  elif [[ -e $(project_dir)/script/rails ]]; then
-    (cd $(project_dir) && smart_rails $*)
-  fi
-}
-
-alias srs="smart_rails_script"
-
-function smart_ruby() {
+function smart_bundle() {
   if [[ -f Gemfile ]]; then
-    bundle exec ruby $*
+    bundle exec $*
   else
-    \ruby $*
+    $*
   fi
 }
 
-function smart_rake() {
-  if [[ -f Gemfile ]]; then
-    bundle exec rake $*
-  else
-    \rake $*
-  fi
-}
-
-alias rake="smart_rake"
-
-function smart_rails() {
-  if [[ -f Gemfile ]]; then
-    bundle exec rails $*
-  else
-    \rails $*
-  fi
-}
-
-alias rails="smart_rails"
+alias rake="smart_bundle rake"
+alias rails="smart_bundle rails"
 
 for pair in $SCRIPT_ABBREVS; do
   shortcut=$(echo $pair | cut -d: -f1)
   longcut=$(echo $pair | cut -d: -f2)
-  alias $shortcut="smart_rails_script $longcut"
+  alias $shortcut="smart_bundle rails $longcut"
 done
 
 # Single Unit Testing
@@ -109,9 +90,9 @@ function ts () {
   if [ -n "$thefile" ]; then
     echo running $thefile
     if [ -n "$LITE_RAILS_TEST" ]; then
-      (cd $(project_dir) && ${RAKE:-smart_ruby} "$thefile" $2 $3 $4)
+      (cd $(project_dir) && ${RAKE:-smart_bundle ruby} "$thefile" $2 $3 $4)
     else
-      (cd $(project_dir) && ${RAKE:-smart_rake} test:units TEST="$thefile" TESTOPTS="$2 $3 $4")
+      (cd $(project_dir) && ${RAKE:-smart_bundle rake} test:units TEST="$thefile" TESTOPTS="$2 $3 $4")
     fi
   else
     echo "$1 not found"
