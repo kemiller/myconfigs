@@ -26,6 +26,7 @@ git_bundles = %w[
   git://github.com/wincent/Command-T
   git://github.com/mattn/zencoding-vim.git
   git://github.com/juvenn/mustache.vim.git
+  git://github.com/uggedal/go-vim.git
 ]
 
 vim_org_scripts = [

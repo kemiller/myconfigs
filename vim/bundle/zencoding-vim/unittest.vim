@@ -267,11 +267,23 @@ finish
           'result': "<a href=\"\"><b><i></i></b><b></b></a>\n",
         },
         {
+          'query': "a>b>i^b",
+          'result': "<a href=\"\"><b><i></i></b><b></b></a>\n",
+        },
+        {
           'query': "a>b>i<<b",
           'result': "<a href=\"\"><b><i></i></b></a>\n<b></b>\n",
         },
         {
+          'query': "a>b>i^^b",
+          'result': "<a href=\"\"><b><i></i></b></a>\n<b></b>\n",
+        },
+        {
           'query': "blockquote>b>i<<b",
+          'result': "<blockquote><b><i></i></b></blockquote>\n<b></b>\n",
+        },
+        {
+          'query': "blockquote>b>i^^b",
           'result': "<blockquote><b><i></i></b></blockquote>\n<b></b>\n",
         },
         {
@@ -315,6 +327,10 @@ finish
           'result': "<div id=\"header\">\n\t<ul>\n\t\t<li></li>\n\t</ul>\n\t<p>Footer</p>\n</div>\n",
         },
         {
+          'query': "#header > ul > li ^ p{Footer}",
+          'result': "<div id=\"header\">\n\t<ul>\n\t\t<li></li>\n\t</ul>\n\t<p>Footer</p>\n</div>\n",
+        },
+        {
           'query': "a#foo$$$*3",
           'result': "<a id=\"foo001\" href=\"\"></a>\n<a id=\"foo002\" href=\"\"></a>\n<a id=\"foo003\" href=\"\"></a>\n",
         },
@@ -331,11 +347,23 @@ finish
           'result': "<div id=\"header\">\n\t<li></li>\n</div>\n<div id=\"content\"></div>\n",
         },
         {
+          'query': "#header>li^#content",
+          'result': "<div id=\"header\">\n\t<li></li>\n</div>\n<div id=\"content\"></div>\n",
+        },
+        {
           'query': "(#header>li)<#content",
           'result': "<div id=\"header\">\n\t<li></li>\n</div>\n<div id=\"content\"></div>\n",
         },
         {
+          'query': "(#header>li)^#content",
+          'result': "<div id=\"header\">\n\t<li></li>\n</div>\n<div id=\"content\"></div>\n",
+        },
+        {
           'query': "a>b>i<<div",
+          'result': "<a href=\"\"><b><i></i></b></a>\n<div></div>\n",
+        },
+        {
+          'query': "a>b>i^^div",
           'result': "<a href=\"\"><b><i></i></b></a>\n<div></div>\n",
         },
         {
@@ -539,6 +567,58 @@ finish
         {
           'query': "bg+!$$$$",
           'result': "background: #FFF url($$$$) 0 0 no-repeat !important;",
+        },
+        {
+          'query': "m$$$$",
+          'result': "margin: $$$$;",
+        },
+        {
+          'query': "m0.1p$$$$",
+          'result': "margin: 0.1%;",
+        },
+        {
+          'query': "m1.0$$$$",
+          'result': "margin: 1.0em;",
+        },
+        {
+          'query': "m2$$$$",
+          'result': "margin: 2px;",
+        },
+        {
+          'query': "bdrs10$$$$",
+          'result': "border-radius: 10px;",
+        },
+        {
+          'query': "-bdrs20$$$$",
+          'result': "-webkit-border-radius: 20px;\n-moz-border-radius: 20px;\nborder-radius: 20px;",
+        },
+        {
+          'query': "lg(top,#fff,#000)$$$$",
+          'result': "background-image:  -webkit-gradient(top, 0 0, 0 100, from(#fff), to(#000));\nbackground-image:  -webkit-linear-gradient(#fff, #000);\nbackground-image:  -moz-linear-gradient(#fff, #000);\nbackground-image:  -o-linear-gradient(#fff, #000);\nbackground-image:  linear-gradient(#fff, #000);\n",
+        },
+        {
+          'query': "m10-5-0$$$$",
+          'result': "margin: 10px 5px 0px;",
+        },
+        {
+          'query': "m-10--5$$$$",
+          'result': "margin: -10px -5px;",
+        },
+        {
+          'query': "m10-auto$$$$",
+          'result': "margin: 10px auto;",
+        },
+        {
+          'query': "w100p$$$$",
+          'result': "width: 100%;",
+        },
+        {
+          'query': "h50e$$$$",
+          'result': "height: 50em;",
+        },
+        {
+          'query': "(bg+)+c$$$$",
+          'result': "background: #FFF url($$$$) 0 0 no-repeat;\ncolor: #000;",
         },
       ],
     },
