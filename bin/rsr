@@ -129,7 +129,7 @@ class AliasCommand < Command
   end
 
   def execute
-    puts %{alias #{@alias}='cd $(rsr path #{@subpath})'}
+    puts %{function #{@alias} () { cd $(rsr path #{@subpath})/$1; } }
     puts %{function _#{@alias}_complete () {
            #{@alias} || return 1;
            COMPREPLY=( `find $2* -type d` )
