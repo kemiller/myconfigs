@@ -1,0 +1,210 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+require 'ostruct'
+
+# 
+# rsr init
+# rsr path <subpath>
+# rsr alias <shortname> <subpath>
+# rsr bundle <cmd*>
+# rsr test <testname>
+# 
+
+class Command 
+
+  def initialize(args)
+  end
+
+  def directory_is_rails(dir)
+      File.exists?(File.join(dir, "config", "boot.rb")) &&
+        File.directory?(File.join(dir, "app"))
+  end
+
+  def detect_rails_dir
+    find_dir_matching(&method(:directory_is_rails))
+  end
+
+  def rails_dir
+    detect_rails_dir || raise("Not in a rails dir")
+  end
+
+  def full_path_for_subdir(subdir)
+    File.join(rails_dir, subdir)
+  end
+
+  def find_dir_matching(&callable)
+    path = Dir.pwd
+    segments = path.split('/')
+    while !segments.empty?
+      dir = File.join(*segments)
+      if callable.call(dir)
+        return dir
+      else
+        segments.pop
+      end
+    end
+  end
+
+end
+
+class CommandDispatcher
+
+  def add(command_klass)
+    registry[command_klass.name] = command_klass
+  end
+
+  def run(args)
+    command_name = args.shift
+    klass = registry[command_name]
+    if klass
+      command = klass.new(args)
+      command.execute
+    else
+      puts "Available Commands:\n\n"
+      registry.keys.each do |name|
+        puts "    #{name}"
+      end
+      exit 1
+    end
+  rescue RuntimeError => re
+    $stderr << re.message
+  end
+
+  private
+
+  def registry
+    @registry ||= {}
+  end
+end
+
+
+class PathCommand < Command
+  def self.name
+    "path"
+  end
+
+  def initialize(args)
+    @subpath = args.shift || ""
+  end
+
+  def execute
+    puts full_path_for_subdir(@subpath)
+  end
+end
+
+class AliasCommand < Command
+  def self.name
+    "alias"
+  end
+
+  def initialize(args)
+    @alias = args.shift
+    @subpath = args.shift
+
+    raise "Usage: rsr alias <shortname> <subpath>" unless @alias && @subpath
+  end
+
+  def execute
+    puts %{alias #{@alias}='cd $(rsr path #{@subpath})'}
+    puts %{function _#{@alias}_complete () {
+           #{@alias} || return 1;
+           COMPREPLY=( `find $2* -type d` )
+       }}
+    puts %{complete -F _#{@alias}_complete #{@alias}}
+  end
+end
+
+class BundleCommand < Command
+  def self.name
+    "bundle"
+  end
+
+  def initialize(args)
+    raise "Usage: rsr bundle command [args]" if args.empty?
+    @args = args
+  end
+
+  def execute
+    if find_dir_matching { |dir| File.exists?(File.join(dir, "Gemfile")) }
+      exec("bundle", "exec", *@args)
+    else
+      exec(*@args)
+    end
+  end
+end
+
+class TestCommand < Command
+  def self.name
+    "test"
+  end
+
+  def initialize(args)
+    @testcase = args.shift
+    @test = args.shift
+
+    raise "Usage: rsr test <testcase> [<test method>]" unless @testcase
+  end
+
+  def execute
+    env = {}
+    env['TEST'] = full_testcase
+    if @test
+      env['TESTOPTS'] = "-n#{@test}"
+    end
+    exec(env, "rake", "test:units")
+  end
+
+  def full_testcase
+    units = full_path_for_subdir('test/unit')
+    funcs = full_path_for_subdir('test/functional')
+
+    possible_files = [
+      File.join(units, @testcase),
+      File.join(units, @testcase + "_test"),
+      File.join(funcs, @testcase),
+      File.join(funcs, @testcase + "_test"),
+      File.join(funcs, @testcase + "_controller_test")
+    ]
+
+    possible_files.each do |file|
+      file += ".rb"
+      if File.exists?(file)
+        return file
+      end
+    end
+  end
+end
+
+class TestListCommand < Command
+  def self.name
+    "testlist"
+  end
+
+  def initialize(args)
+    args.shift
+    @prefix = args.shift || ""
+  end
+
+  def execute
+    units = full_path_for_subdir('test/unit')
+    funcs = full_path_for_subdir('test/functional')
+
+    files  = Dir["#{units}/**/#{@prefix}*.rb"].map do |file|
+      file.sub(units+"/", "")
+    end
+    files += Dir["#{funcs}/**/#{@prefix}*.rb"].map do |file|
+      file.sub(funcs+"/", "")
+    end
+
+    puts files
+  end
+end
+
+dispatcher = CommandDispatcher.new
+dispatcher.add(PathCommand)
+dispatcher.add(AliasCommand)
+dispatcher.add(BundleCommand)
+dispatcher.add(TestCommand)
+dispatcher.add(TestListCommand)
+dispatcher.run(ARGV)

@@ -73,7 +73,7 @@ export GIT_PS1_SHOWDIRTYSTATE=true
 #export GIT_PS1_DESCRIBE_STYLE=branch
 #export GIT_PS1_SHOWUNTRACKEDFILES=true
 
-export PS1='$(detect_rails_dir)$(gitprompt=`my-git-prompt`; echo "\[\e]0;\w $gitprompt\007\]\n\[\e[${PROMPTCOLOR};1;7m\]\h \w \[\e[0m\] \t${gitprompt}$(ruby-version-prompt u)\n➔ ")'
+export PS1='$(gitprompt=`my-git-prompt`; echo "\[\e]0;\w $gitprompt\007\]\n\[\e[${PROMPTCOLOR};1;7m\]\h \w \[\e[0m\] \t${gitprompt}$(ruby-version-prompt u)\n➔ ")'
 
 ## 
 ## Misc
