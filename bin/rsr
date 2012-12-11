@@ -49,10 +49,10 @@ class Command
 
   def bundle_exec(*args)
     if find_dir_matching { |dir| File.exists?(File.join(dir, "Gemfile")) }
-      exec("bundle", "exec", *args)
-    else
-      exec(*args)
+      args = ["bundle", "exec", *args]
     end
+    puts args.join(' ')
+    exec(*args)
   end
 
 end
@@ -78,6 +78,7 @@ class CommandDispatcher
     end
   rescue RuntimeError => re
     $stderr << re.message
+    exit 1
   end
 
   private
@@ -186,22 +187,20 @@ class TestListCommand < Command
   end
 
   def initialize(args)
-    args.shift
+    args.shift # ignore the first argument, set by bash completion
     @prefix = args.shift || ""
   end
 
   def execute
-    units = full_path_for_subdir('test/unit')
-    funcs = full_path_for_subdir('test/functional')
+    puts getfiles('test/unit') + getfiles('test/functional')
+  end
 
-    files  = Dir["#{units}/**/#{@prefix}*.rb"].map do |file|
-      file.sub(units+"/", "")
-    end
-    files += Dir["#{funcs}/**/#{@prefix}*.rb"].map do |file|
-      file.sub(funcs+"/", "")
-    end
+  private
 
-    puts files
+  def getfiles(subdir)
+    path = full_path_for_subdir(subdir)
+    Dir.chdir(path)
+    Dir["**/#{@prefix}*.rb"]
   end
 end
 

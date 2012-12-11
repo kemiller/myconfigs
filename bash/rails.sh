@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DIR_ABBREVS="ac:app/controllers am:app/models aa:app/admin ah:app/helpers"
+DIR_ABBREVS="a: ac:app/controllers am:app/models aa:app/admin ah:app/helpers"
 DIR_ABBREVS="$DIR_ABBREVS tf:test/functional tu:test/unit ti:test/integration"
 DIR_ABBREVS="$DIR_ABBREVS db:db mg:db/migrate tc:test/factories lb:lib av:app/views"
 DIR_ABBREVS="$DIR_ABBREVS aw:app/workers"
@@ -16,7 +16,7 @@ done
 for pair in $DIR_ABBREVS; do
   shortcut=$(echo $pair | cut -d: -f1)
   longcut=$(echo $pair | cut -d: -f2)
-  eval "$(rsr alias $shortcut $longcut)"
+  eval "$(rsr alias "$shortcut" "$longcut")"
 done
 
 alias a='cd $(rsr path)'
