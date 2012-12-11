@@ -16,24 +16,22 @@ SCRIPT_ABBREVS="ss:server cn:console dbc:dbconsole gen:generate"
 
 alias rake="rsr bundle rake"
 alias rails="rsr bundle rails"
+alias vagrant="rsr bundle vagrant"
 
 for pair in $SCRIPT_ABBREVS; do
   shortcut=$(echo $pair | cut -d: -f1)
   longcut=$(echo $pair | cut -d: -f2)
-  alias $shortcut="rails $longcut"
+  alias $shortcut="rsr bundle rails $longcut"
 done
 
 for pair in $DIR_ABBREVS; do
-
   shortcut=$(echo $pair | cut -d: -f1)
   longcut=$(echo $pair | cut -d: -f2)
-
   eval "$(rsr alias $shortcut $longcut)"
 done
 
 alias ts="rsr test"
 complete -C "rsr testlist" ts
-
 
 # Misc
 
@@ -41,11 +39,6 @@ function gd () {
   pushd $RUBYROOT/gems/1.8/gems/$1
 }
 complete -W '`\ls -1 $RUBYROOT/gems/1.8/gems`' gd
-
-alias be="bundle exec"
-alias bel="bundle exec rails"
-alias ber="bundle exec rake"
-alias bev="bundle exec vagrant"
 
 alias rgrep="grep -r --include='*.rb'"
 alias rack="ack --ruby"

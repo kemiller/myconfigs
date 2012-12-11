@@ -3,13 +3,14 @@
 require 'optparse'
 require 'ostruct'
 
-# 
+#
 # rsr init
 # rsr path <subpath>
 # rsr alias <shortname> <subpath>
 # rsr bundle <cmd*>
 # rsr test <testname>
-# 
+# rsr testlist <cmd> <prefix>
+#
 
 class Command 
 
@@ -43,6 +44,14 @@ class Command
       else
         segments.pop
       end
+    end
+  end
+
+  def bundle_exec(*args)
+    if find_dir_matching { |dir| File.exists?(File.join(dir, "Gemfile")) }
+      exec("bundle", "exec", *args)
+    else
+      exec(*args)
     end
   end
 
@@ -126,11 +135,7 @@ class BundleCommand < Command
   end
 
   def execute
-    if find_dir_matching { |dir| File.exists?(File.join(dir, "Gemfile")) }
-      exec("bundle", "exec", *@args)
-    else
-      exec(*@args)
-    end
+    bundle_exec(*@args)
   end
 end
 
@@ -147,12 +152,11 @@ class TestCommand < Command
   end
 
   def execute
-    env = {}
-    env['TEST'] = full_testcase
+    ENV['TEST'] = full_testcase
     if @test
-      env['TESTOPTS'] = "-n#{@test}"
+      ENV['TESTOPTS'] = "-n#{@test}"
     end
-    exec(env, "rake", "test:units")
+    bundle_exec("rake", "test:units")
   end
 
   def full_testcase
