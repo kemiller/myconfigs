@@ -14,6 +14,8 @@ require 'ostruct'
 
 class Command 
 
+  SAVEFILE = File.join(ENV['HOME'], ".rsrdir")
+
   def initialize(args)
   end
 
@@ -23,11 +25,22 @@ class Command
   end
 
   def detect_rails_dir
-    find_dir_matching(&method(:directory_is_rails))
+    save_dir(find_dir_matching(&method(:directory_is_rails)))
+  end
+
+  def save_dir(dir)
+    if dir
+      File.open(SAVEFILE, File::CREAT|File::TRUNC|File::WRONLY) { |f| f.puts(dir) }
+    end
+    dir
+  end
+
+  def recall_dir
+    File.open(SAVEFILE, File::CREAT|File::RDONLY) { |f| f.read.strip }
   end
 
   def rails_dir
-    detect_rails_dir || raise("Not in a rails dir")
+    detect_rails_dir || recall_dir || raise("Not in a rails dir")
   end
 
   def full_path_for_subdir(subdir)
