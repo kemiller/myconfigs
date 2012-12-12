@@ -188,18 +188,20 @@ class TestCommand < Command
 
     possible_files = [
       File.join(units, @testcase),
-      File.join(units, @testcase + "_test"),
+      File.join(units, @testcase + ".rb"),
+      File.join(units, @testcase + "_test.rb"),
       File.join(funcs, @testcase),
-      File.join(funcs, @testcase + "_test"),
-      File.join(funcs, @testcase + "_controller_test")
+      File.join(funcs, @testcase + ".rb"),
+      File.join(funcs, @testcase + "_test.rb"),
+      File.join(funcs, @testcase + "_controller_test.rb")
     ]
 
     possible_files.each do |file|
-      file += ".rb"
       if File.exists?(file)
         return file
       end
     end
+    raise "No such test file: #{@testcase}"
   end
 end
 
