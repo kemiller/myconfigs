@@ -10,7 +10,7 @@ SCRIPT_ABBREVS="ss:server cn:console dbc:dbconsole gen:generate"
 for pair in $SCRIPT_ABBREVS; do
   shortcut=$(echo $pair | cut -d: -f1)
   longcut=$(echo $pair | cut -d: -f2)
-  alias $shortcut="rsr bundle rails $longcut"
+  alias $shortcut="(a; rsr bundle rails $longcut)"
 done
 
 for pair in $DIR_ABBREVS; do
@@ -20,9 +20,8 @@ for pair in $DIR_ABBREVS; do
 done
 
 alias a='cd $(rsr path)'
-alias rake="rsr bundle rake"
-alias rails="rsr bundle rails"
-alias vagrant="rsr bundle vagrant"
+alias rk="(a; rsr bundle rake)"
+alias rls="(a; rsr bundle rails)"
 alias ts="rsr test"
 alias rgrep="grep -r --include='*.rb'"
 alias rack="ack --ruby"

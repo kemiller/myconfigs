@@ -2,6 +2,7 @@
 
 require 'optparse'
 require 'ostruct'
+require 'fileutils'
 
 #
 # rsr init
@@ -178,6 +179,7 @@ class TestCommand < Command
       if @test
         ENV['TESTOPTS'] = "-n#{@test}"
       end
+      FileUtils.cd(rails_dir)
       bundle_exec("rake", "test:units")
     end
   end
