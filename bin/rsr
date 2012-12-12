@@ -166,11 +166,20 @@ class TestCommand < Command
   end
 
   def execute
-    ENV['TEST'] = full_testcase
-    if @test
-      ENV['TESTOPTS'] = "-n#{@test}"
+    if ENV['RSRTESTLITE'] == 'true'
+      if @test
+        args = [full_testcase, "-n#{@test}"]
+      else
+        args = [full_testcase]
+      end
+      bundle_exec("ruby", *args)
+    else
+      ENV['TEST'] = full_testcase
+      if @test
+        ENV['TESTOPTS'] = "-n#{@test}"
+      end
+      bundle_exec("rake", "test:units")
     end
-    bundle_exec("rake", "test:units")
   end
 
   def full_testcase
