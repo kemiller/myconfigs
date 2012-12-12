@@ -32,6 +32,6 @@ function gd () {
 }
 
 complete -W '`\ls -1 $RUBYROOT/gems/1.8/gems`' gd
-complete -W "$(rsr testlist)" ts
+complete -C "rsr testlist" ts
 complete -C ~/bin/rake_bash_complete -o default rake
 
