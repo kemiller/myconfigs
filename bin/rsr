@@ -161,7 +161,8 @@ class TestCommand < Command
 
   def initialize(args)
     @testcase = args.shift
-    @test = args.shift
+    @test = args.join('_').gsub(/\s+/,'_')
+    @test = "test_#{@test}" unless @test =~ /\Atest_/
 
     raise "Usage: rsr test <testcase> [<test method>]" unless @testcase
   end
