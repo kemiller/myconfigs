@@ -65,7 +65,15 @@ class Command
     if find_dir_matching { |dir| File.exists?(File.join(dir, "Gemfile")) }
       args = ["bundle", "exec", *args]
     end
-    puts args.join(' ')
+
+    if args.last.is_a? Hash then
+      env = args.pop
+      env.each { |k,v| ENV[k.to_s.upcase] = v }
+      puts args.join(' ') + ' ' + env.collect { |k,v| "#{k.to_s.upcase}=#{v}" }.join(' ')
+    else
+      puts args.join(' ')
+    end
+
     exec(*args)
   end
 
@@ -172,20 +180,19 @@ class TestCommand < Command
   def execute
     if ENV['RSRTESTLITE'] == 'true'
       if @test
-        args = [full_testcase, "-v", "-n#{@test}"]
+        args = [full_testcase, "-n#{@test}"]
       else
         args = [full_testcase, "-v"]
       end
       bundle_exec("ruby", *args)
     else
-      ENV['TEST'] = full_testcase
       if @test
-        ENV['TESTOPTS'] = "-n#{@test}"
+        opts = "-n#{@test}"
       else
-        ENV['TESTOPTS'] = "-v"
+        opts = "-v"
       end
       FileUtils.cd(rails_dir)
-      bundle_exec("rake", "test:units")
+      bundle_exec("rake", "test:units", :test => full_testcase, :testopts => opts)
     end
   end
 
