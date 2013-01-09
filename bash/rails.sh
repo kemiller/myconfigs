@@ -20,8 +20,8 @@ for pair in $DIR_ABBREVS; do
 done
 
 alias a='cd $(rsr path)'
-alias rk="pushd $(rsr path); rsr bundle rake"
-alias rls="pushd $(rsr path); rsr bundle rails"
+alias rk='pushd $(rsr path); rsr bundle rake'
+alias rls='pushd $(rsr path); rsr bundle rails'
 alias ts="rsr test"
 alias rgrep="grep -r --include='*.rb'"
 alias rack="ack --ruby"
