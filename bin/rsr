@@ -68,6 +68,7 @@ class Command
 
     if args.last.is_a? Hash then
       env = args.pop
+      env.delete_if { |k,v| !v }
       env.each { |k,v| ENV[k.to_s.upcase] = v }
       puts args.join(' ') + ' ' + env.collect { |k,v| "#{k.to_s.upcase}=#{v}" }.join(' ')
     else
@@ -168,31 +169,42 @@ class TestCommand < Command
   end
 
   def initialize(args)
+    opts = OptionParser.new do |opts|
+      opts.on "-p", "Run test prep before loading test case" do |p|
+	@prepare = true
+      end
+
+      opts.on "-v", "Verbose output" do |v|
+	@verbose = true
+      end
+    end
+
+    opts.parse!(args)
+
     @testcase = args.shift
     unless args.empty?
       @test = args.join('_').gsub(/\s+/,'_')
       @test = "test_#{@test}" unless @test =~ /\Atest_/
     end
 
-    raise "Usage: rsr test <testcase> [<test method>]" unless @testcase
+    raise "Usage: rsr test [-pv] <testcase> [<test method>]" unless @testcase
+  end
+  
+  def execute
+    FileUtils.cd(rails_dir)
+    if @prepare
+      bundle_exec("rake", "test:units", :test => full_testcase, :testopts => testopts)
+    else
+      args = [full_testcase, testopts].compact
+      bundle_exec("ruby", *args)
+    end
   end
 
-  def execute
-    if ENV['RSRTESTLITE'] == 'true'
-      if @test
-        args = [full_testcase, "-n#{@test}"]
-      else
-        args = [full_testcase, "-v"]
-      end
-      bundle_exec("ruby", *args)
-    else
-      if @test
-        opts = "-n#{@test}"
-      else
-        opts = "-v"
-      end
-      FileUtils.cd(rails_dir)
-      bundle_exec("rake", "test:units", :test => full_testcase, :testopts => opts)
+  def testopts
+    if @test
+      "-n#{@test}"
+    elsif @verbose
+      "-v" 
     end
   end
 
