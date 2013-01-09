@@ -211,16 +211,17 @@ class TestCommand < Command
     funcs = full_path_for_subdir('test/functional')
 
     possible_files = [
-      File.join(units, @testcase),
-      File.join(units, @testcase + ".rb"),
-      File.join(units, @testcase + "_test.rb"),
-      File.join(funcs, @testcase),
-      File.join(funcs, @testcase + ".rb"),
-      File.join(funcs, @testcase + "_test.rb"),
-      File.join(funcs, @testcase + "_controller_test.rb")
+      [units, @testcase],
+      [units, @testcase + ".rb"],
+      [units, @testcase + "_test.rb"],
+      [funcs, @testcase],
+      [funcs, @testcase + ".rb"],
+      [funcs, @testcase + "_test.rb"],
+      [funcs, @testcase + "_controller_test.rb"]
     ]
 
-    possible_files.each do |file|
+    possible_files.each do |file_parts|
+      file = File.join(*file_parts)
       if File.exists?(file)
         return file
       end
