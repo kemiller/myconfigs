@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 
 require 'optparse'
-require 'ostruct'
 require 'fileutils'
 
 #
@@ -70,7 +69,7 @@ class Command
       env = args.pop
       env.delete_if { |k,v| !v }
       env.each { |k,v| ENV[k.to_s.upcase] = v }
-      puts args.join(' ') + ' ' + env.collect { |k,v| "#{k.to_s.upcase}=#{v}" }.join(' ')
+      puts args.join(' ') + ' ' + env.collect { |k,v| "#{k.to_s.upcase}=\"#{v}\"" }.join(' ')
     else
       puts args.join(' ')
     end
@@ -201,11 +200,10 @@ class TestCommand < Command
   end
 
   def testopts
-    if @test
-      "-n#{@test}"
-    elsif @verbose
-      "-v" 
-    end
+		opts = []
+		opts << "-n#{@test}" if @test
+		opts << "-v" if @verbose
+		opts.join(' ') unless opts.empty?
   end
 
   def full_testcase
@@ -261,3 +259,5 @@ dispatcher.add(BundleCommand)
 dispatcher.add(TestCommand)
 dispatcher.add(TestListCommand)
 dispatcher.run(ARGV)
+
+# vim: sw=2 : ts=2 :
