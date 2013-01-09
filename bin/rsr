@@ -20,8 +20,8 @@ class Command
   end
 
   def directory_is_rails(dir)
-      File.exists?(File.join(dir, "config", "boot.rb")) &&
-        File.directory?(File.join(dir, "app"))
+    File.exists?(File.join(dir, "config", "boot.rb")) &&
+      File.directory?(File.join(dir, "app"))
   end
 
   def detect_rails_dir
@@ -170,11 +170,11 @@ class TestCommand < Command
   def initialize(args)
     opts = OptionParser.new do |opts|
       opts.on "-p", "Run test prep before loading test case" do |p|
-	@prepare = true
+        @prepare = true
       end
 
       opts.on "-v", "Verbose output" do |v|
-	@verbose = true
+        @verbose = true
       end
     end
 
@@ -188,7 +188,7 @@ class TestCommand < Command
 
     raise "Usage: rsr test [-pv] <testcase> [<test method>]" unless @testcase
   end
-  
+
   def execute
     FileUtils.cd(rails_dir)
     if @prepare
@@ -200,10 +200,10 @@ class TestCommand < Command
   end
 
   def testopts
-		opts = []
-		opts << "-n#{@test}" if @test
-		opts << "-v" if @verbose
-		opts.join(' ') unless opts.empty?
+    opts = []
+    opts << "-n#{@test}" if @test
+    opts << "-v" if @verbose
+    opts.join(' ') unless opts.empty?
   end
 
   def full_testcase
@@ -260,4 +260,4 @@ dispatcher.add(TestCommand)
 dispatcher.add(TestListCommand)
 dispatcher.run(ARGV)
 
-# vim: sw=2 : ts=2 :
+# vim: sw=2 : ts=2 : et :
