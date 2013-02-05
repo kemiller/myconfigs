@@ -249,7 +249,7 @@ class TestListCommand < Command
   def getfiles(subdir)
     path = full_path_for_subdir(subdir)
     Dir.chdir(path)
-    Dir["**/*.rb"].grep(/^#{@prefix}/)
+    Dir["**/*.rb"].grep(/^#{@prefix}/).map { |f| f.gsub(/_test.rb/,'') }
   end
 end
 
