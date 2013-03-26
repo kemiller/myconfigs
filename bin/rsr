@@ -169,6 +169,7 @@ class TestCommand < Command
 
   def initialize(args)
     opts = OptionParser.new do |opts|
+      opts.program_name = "rsr test"
       opts.on "-p", "Run test prep before loading test case" do |p|
         @prepare = true
       end

@@ -20,6 +20,7 @@ set printoptions=portrait:n,paper:letter
 set laststatus=2
 set statusline=%t\ %{fugitive#statusline()}\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 set wildignore=.git,.svn,*~,*.swp,*.swo,build
+set wildmode=list:longest
 set switchbuf=usetab
 
 if has("persistent_undo")

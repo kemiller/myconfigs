@@ -5,7 +5,7 @@
 	st = status
 	br = branch
 	dlog = log --decorate
-	plog = log --pretty=format:\"%h %Cblue%cr%Creset %cn %Cgreen%s%Creset %d\"
+	plog = log --pretty=format:\"%h %Cblue%cr%Creset %cn %s %d\" 
 
 [push]
 	default = tracking
@@ -35,7 +35,8 @@
 	name = Ken Miller
 	email = ken@bitfield.net
 [core]
-	excludesfile = /Users/ken/.gitignore_global
+	excludesfile = $HOME/.gitignore_global
+  pager = cut -c 1-`tput cols` | less
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 	path = 
