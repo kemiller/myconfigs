@@ -10,11 +10,14 @@ function! zencoding#lang#css#parseIntoTree(abbr, type)
 
   let settings = zencoding#getSettings()
   let indent = zencoding#getIndentation(type)
-  
+  let aliases = zencoding#getResource(type, 'aliases', {})
+  let snippets = zencoding#getResource(type, 'snippets', {})
+  let use_pipe_for_cursor = zencoding#getResource(type, 'use_pipe_for_cursor', 1)
+
   let root = { 'name': '', 'attr': {}, 'child': [], 'snippet': '', 'multiplier': 1, 'parent': {}, 'value': '', 'pos': 0, 'important': 0 }
 
   " emmet
-  let tokens = split(abbr, '+\ze[^)!]')
+  let tokens = split(abbr, '+\ze[^+)!]')
   for n in range(len(tokens))
     let token = tokens[n]
     let prop = matchlist(token, '^\(-\{0,1}[a-zA-Z]\+\|[a-zA-Z0-9]\++\{0,1}\|([a-zA-Z0-9]\++\{0,1})\)\(\%([0-9.-]\+[pe]\{0,1}-\{0,1}\|-auto\)*\)$')
@@ -45,7 +48,7 @@ function! zencoding#lang#css#parseIntoTree(abbr, type)
         endif
       endfor
     endif
-  
+
     let tag_name = token
     if tag_name =~ '.!$'
       let tag_name = tag_name[:-2]
@@ -56,16 +59,13 @@ function! zencoding#lang#css#parseIntoTree(abbr, type)
     " make default node
     let current = { 'name': '', 'attr': {}, 'child': [], 'snippet': '', 'multiplier': 1, 'parent': {}, 'value': '', 'pos': 0, 'important': important }
     let current.name = tag_name
-  
+
     " aliases
-    let aliases = zencoding#getResource(type, 'aliases', {})
     if has_key(aliases, tag_name)
       let current.name = aliases[tag_name]
     endif
-    let use_pipe_for_cursor = zencoding#getResource(type, 'use_pipe_for_cursor', 1)
-  
+
     " snippets
-    let snippets = zencoding#getResource(type, 'snippets', {})
     if !empty(snippets) && has_key(snippets, tag_name)
       let snippet = snippets[tag_name]
       if use_pipe_for_cursor
@@ -76,27 +76,27 @@ function! zencoding#lang#css#parseIntoTree(abbr, type)
       let current.snippet = join(lines, "\n")
       let current.name = ''
       let current.snippet = substitute(current.snippet, ';', value . ';', '')
-      if use_pipe_for_cursor && len(value) > 0 && stridx(value, '${cursor}') == -1
-        let current.snippet = substitute(current.snippet, '${cursor}', '', 'g') . '${cursor}'
+      if use_pipe_for_cursor && len(value) > 0
+        let current.snippet = substitute(current.snippet, '\${cursor}', '', 'g')
       endif
       if n < len(tokens) - 1
         let current.snippet .= "\n"
       endif
     endif
-  
+
     let current.pos = 0
     let lg = matchlist(token, '^\%(linear-gradient\|lg\)(\s*\(\w\+\)\s*,\s*\([^,]\+\)\s*,\s*\([^)]\+\)\s*)$')
     if len(lg)
       let current.name = ''
-      let current.snippet = printf("background-image: -webkit-gradient(%s, 0 0, 0 100%, from(%s), to(%s));\n", lg[1], lg[2], lg[3])
+      let current.snippet = printf("background-image:-webkit-gradient(%s, 0 0, 0 100%, from(%s), to(%s));\n", lg[1], lg[2], lg[3])
       call add(root.child, deepcopy(current))
-      let current.snippet = printf("background-image: -webkit-linear-gradient(%s, %s);\n", lg[2], lg[3])
+      let current.snippet = printf("background-image:-webkit-linear-gradient(%s, %s);\n", lg[2], lg[3])
       call add(root.child, deepcopy(current))
-      let current.snippet = printf("background-image: -moz-linear-gradient(%s, %s);\n", lg[2], lg[3])
+      let current.snippet = printf("background-image:-moz-linear-gradient(%s, %s);\n", lg[2], lg[3])
       call add(root.child, deepcopy(current))
-      let current.snippet = printf("background-image: -o-linear-gradient(%s, %s);\n", lg[2], lg[3])
+      let current.snippet = printf("background-image:-o-linear-gradient(%s, %s);\n", lg[2], lg[3])
       call add(root.child, deepcopy(current))
-      let current.snippet = printf("background-image: linear-gradient(%s, %s);\n", lg[2], lg[3])
+      let current.snippet = printf("background-image:linear-gradient(%s, %s);\n", lg[2], lg[3])
       call add(root.child, deepcopy(current))
     elseif prefix
       let snippet = current.snippet

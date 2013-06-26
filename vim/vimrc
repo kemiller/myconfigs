@@ -111,4 +111,4 @@ augroup END
 " Highlight trailing whitespace
 ":au InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 ":au InsertLeave * match ExtraWhitespace /\s\+$/
-set list listchars=trail:⨆,tab:>-
+"set list listchars=trail:⨆,tab:>-

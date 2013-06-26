@@ -146,10 +146,17 @@ endfunction
 "==============================================================================
 function! zencoding#util#getContentFromURL(url)
   let res = system(printf("%s %s", g:zencoding_curl_command, shellescape(substitute(a:url, '#.*', '', ''))))
-  let s1 = len(split(res, '?'))
-  let utf8 = iconv(res, 'utf-8', &encoding)
-  let s2 = len(split(utf8, '?'))
-  return (s2 == s1 || s2 >= s1 * 2) ? utf8 : res
+  let charset = matchstr(res, '<meta[^>]\+content=["''][^;"'']\+;\s*charset=\zs[^;"'']\+\ze["''][^>]*>')
+  if len(charset) == 0
+    let charset = matchstr(res, '<meta\s\+charset=["'']\?\zs[^"'']\+\ze["'']\?[^>]*>')
+  endif
+  if len(charset) == 0
+    let s1 = len(split(res, '?'))
+    let utf8 = iconv(res, 'utf-8', &encoding)
+    let s2 = len(split(utf8, '?'))
+    return (s2 == s1 || s2 >= s1 * 2) ? utf8 : res
+  endif
+  return iconv(res, charset, &encoding)
 endfunction
 
 function! zencoding#util#getTextFromHTML(buf)
@@ -191,6 +198,11 @@ endfunction
 
 function! zencoding#util#getImageSize(fn)
   let fn = a:fn
+
+  if zencoding#util#isImageMagickInstalled()
+    return zencoding#util#imageSizeWithImageMagick(fn)
+  endif
+
   if filereadable(fn)
     let hex = substitute(system('xxd -p "'.fn.'"'), '\n', '', 'g')
   else
@@ -228,3 +240,55 @@ function! zencoding#util#getImageSize(fn)
   return [width, height]
 endfunction
 
+function! zencoding#util#imageSizeWithImageMagick(fn)
+  let img_info = system('identify -format "%wx%h" "'.a:fn.'"')
+  let img_size = split(substitute(img_info, '\n', '', ''), 'x')
+  let width = img_size[0]
+  let height = img_size[1]
+  return [width, height]
+endfunction
+
+function! zencoding#util#isImageMagickInstalled()
+  if !get(s:, 'zencoding_use_identify', 1)
+    return 0
+  endif
+  return executable('identify')
+endfunction
+
+function! zencoding#util#unique(arr)
+  let m = {}
+  let r = []
+  for i in a:arr
+    if !has_key(m, i)
+      let m[i] = 1
+      call add(r, i)
+    endif
+  endfor
+  return r
+endfunction
+
+let s:seed = localtime()
+function! zencoding#util#srand(seed)
+  let s:seed = a:seed
+endfunction
+
+function! zencoding#util#rand()
+  let s:seed = s:seed * 214013 + 2531011
+  return (s:seed < 0 ? s:seed - 0x80000000 : s:seed) / 0x10000 % 0x8000
+endfunction
+
+function! zencoding#util#cache(name, ...)
+  let content = get(a:000, 0, "")
+  let dir = expand("~/.zencoding/cache")
+  if !isdirectory(dir)
+    call mkdir(dir, "p", 0700)
+  endif
+  let file = dir . "/" . substitute(a:name, '\W', '_', 'g')
+  if len(content) == 0
+    if !filereadable(file)
+      return ""
+    endif
+	return join(readfile(file), "\n")
+  endif
+  call writefile(split(content, "\n"), file)
+endfunction

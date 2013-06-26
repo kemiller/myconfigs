@@ -212,7 +212,7 @@ finish
         },
         {
           'query': "div#wrapper.box.current[title=TITLE rel]",
-          'result': "<div id=\"wrapper\" rel=\"\" class=\"box current\" title=\"TITLE\"></div>\n",
+          'result': "<div id=\"wrapper\" class=\"box current\" title=\"TITLE\" rel=\"\"></div>\n",
         },
         {
           'query': "div#main+div#sub",
@@ -248,7 +248,7 @@ finish
         },
         {
           'query': "a[href=http://www.google.com/].foo#hoge",
-          'result': "<a id=\"hoge\" href=\"http://www.google.com/\" class=\"foo\"></a>\n",
+          'result': "<a id=\"hoge\" class=\"foo\" href=\"http://www.google.com/\"></a>\n",
         },
         {
           'query': "a[href=http://www.google.com/]{Google}",
@@ -288,15 +288,15 @@ finish
         },
         {
           'query': "a[href=foo][class=bar]",
-          'result': "<a href=\"foo\" class=\"bar\"></a>\n",
+          'result': "<a class=\"bar\" href=\"foo\"></a>\n",
         },
         {
           'query': "a[a=b][b=c=d][e]{foo}*2",
-          'result': "<a a=\"b\" b=\"c=d\" e=\"\" href=\"\">foo</a>\n<a a=\"b\" b=\"c=d\" e=\"\" href=\"\">foo</a>\n",
+          'result': "<a href=\"\" a=\"b\" b=\"c=d\" e=\"\">foo</a>\n<a href=\"\" a=\"b\" b=\"c=d\" e=\"\">foo</a>\n",
         },
         {
           'query': "a[a=b][b=c=d][e]*2{foo}",
-          'result': "<a a=\"b\" b=\"c=d\" e=\"\" href=\"\"></a>\n<a a=\"b\" b=\"c=d\" e=\"\" href=\"\"></a>\nfoo",
+          'result': "<a href=\"\" a=\"b\" b=\"c=d\" e=\"\"></a>\n<a href=\"\" a=\"b\" b=\"c=d\" e=\"\"></a>\nfoo",
         },
         {
           'query': "a*2{foo}a",
@@ -404,11 +404,11 @@ finish
         },
         {
           'query': "link:css",
-          'result': "<link media=\"all\" rel=\"stylesheet\" href=\"style.css\" type=\"text/css\" />\n",
+          'result': "<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" media=\"all\" />\n",
         },
         {
           'query': "a[title=\"Hello', world\" rel]",
-          'result': "<a rel=\"\" href=\"\" title=\"Hello', world\"></a>\n",
+          'result': "<a href=\"\" title=\"Hello', world\" rel=\"\"></a>\n",
         },
         {
           'query': "div>a#foo{bar}",
@@ -490,6 +490,18 @@ finish
           'query': "{test case $$$ }*3",
           'result': "test case 001 test case 002 test case 003 ",
         },
+        {
+          'query': "a[title=$#]{foo}",
+          'result': "<a href=\"\" title=\"foo\">foo</a>\n",
+        },
+        {
+          'query': "span.item$*2>{item $}",
+          'result': "<span class=\"item1\">item 1</span>\n<span class=\"item2\">item 2</span>\n",
+        },
+        {
+          'query': "    <div class=\"footer_nav\">\n        <a href=\"#\">nav link</a>\n    </div>$$$$\\<esc>ggVG\\<c-y>,div\\<cr>$$$$",
+          'result': "    <div>\n        <div class=\"footer_nav\">\n            <a href=\"#\">nav link</a>\n        </div>\n    </div>",
+        },
       ],
     },
     {
@@ -528,6 +540,10 @@ finish
         {
           'query': "img[src=/logo.png]$$$$\\<c-y>,\\<c-y>i$$$$",
           'result': "<img src=\"/logo.png\" alt=\"\" />",
+        },
+        {
+          'query': "img[src=http://mattn.kaoriya.net/images/logo.png width=foo height=bar]$$$$\\<c-y>,\\<c-y>i$$$$",
+          'result': "<img src=\"http://mattn.kaoriya.net/images/logo.png\" alt=\"\" width=\"96\" height=\"96\" />",
         },
       ],
     },
@@ -594,7 +610,7 @@ finish
         },
         {
           'query': "lg(top,#fff,#000)$$$$",
-          'result': "background-image:  -webkit-gradient(top, 0 0, 0 100, from(#fff), to(#000));\nbackground-image:  -webkit-linear-gradient(#fff, #000);\nbackground-image:  -moz-linear-gradient(#fff, #000);\nbackground-image:  -o-linear-gradient(#fff, #000);\nbackground-image:  linear-gradient(#fff, #000);\n",
+          'result': "background-image: -webkit-gradient(top, 0 0, 0 100, from(#fff), to(#000));\nbackground-image: -webkit-linear-gradient(#fff, #000);\nbackground-image: -moz-linear-gradient(#fff, #000);\nbackground-image: -o-linear-gradient(#fff, #000);\nbackground-image: linear-gradient(#fff, #000);\n",
         },
         {
           'query': "m10-5-0$$$$",
@@ -619,6 +635,10 @@ finish
         {
           'query': "(bg+)+c$$$$",
           'result': "background: #FFF url($$$$) 0 0 no-repeat;\ncolor: #000;",
+        },
+        {
+          'query': "m0+bgi+bg++p0$$$$",
+          'result': "margin: 0px;\nbackground-image: url($$$$);\nbackground: #FFF url() 0 0 no-repeat;\npadding: 0px;",
         },
       ],
     },
@@ -645,6 +665,10 @@ finish
         {
           'query': ".content{Hello!}|haml",
           'result': "%div.content Hello!\n",
+        },
+        {
+          'query': "a[title=$#]{foo}",
+          'result': "%a{ :href => \"\", :title => \"foo\" } foo\n",
         },
       ],
     },
@@ -684,11 +708,11 @@ finish
       'tests': [
         {
           'query': "div>p+ul#foo>li.bar$[foo=bar][bar=baz]*3>{baz}",
-          'result': "div\n  p\n  ul id=\"foo\"\n    li foo=\"bar\" bar=\"baz\" class=\"bar1\"\n      | baz\n    li foo=\"bar\" bar=\"baz\" class=\"bar2\"\n      | baz\n    li foo=\"bar\" bar=\"baz\" class=\"bar3\"\n      | baz\n",
+          'result': "div\n  p\n  ul id=\"foo\"\n    li class=\"bar1\" foo=\"bar\" bar=\"baz\"\n      | baz\n    li class=\"bar2\" foo=\"bar\" bar=\"baz\"\n      | baz\n    li class=\"bar3\" foo=\"bar\" bar=\"baz\"\n      | baz\n",
         },
         {
           'query': "div>p+ul#foo>li.bar$[foo=bar][bar=baz]*3>{baz}|slim",
-          'result': "div\n  p\n  ul id=\"foo\"\n    li foo=\"bar\" bar=\"baz\" class=\"bar1\"\n      | baz\n    li foo=\"bar\" bar=\"baz\" class=\"bar2\"\n      | baz\n    li foo=\"bar\" bar=\"baz\" class=\"bar3\"\n      | baz\n",
+          'result': "div\n  p\n  ul id=\"foo\"\n    li class=\"bar1\" foo=\"bar\" bar=\"baz\"\n      | baz\n    li class=\"bar2\" foo=\"bar\" bar=\"baz\"\n      | baz\n    li class=\"bar3\" foo=\"bar\" bar=\"baz\"\n      | baz\n",
         },
         {
           'query': "a*3|slim",
@@ -697,6 +721,10 @@ finish
         {
           'query': ".content{Hello!}|slim",
           'result': "div class=\"content\"\n  | Hello!\n",
+        },
+        {
+          'query': "a[title=$#]{foo}",
+          'result': "a href=\"\" title=\"foo\"\n  | foo\n",
         },
       ],
     },
@@ -740,7 +768,7 @@ finish
         },
         {
           'query': "ap>wp",
-          'result': "<xsl:apply-templates select=\"\" mode=\"\">\n\t<xsl:with-param select=\"\" name=\"\"></xsl:with-param>\n</xsl:apply-templates>\n",
+          'result': "<xsl:apply-templates select=\"\" mode=\"\">\n\t<xsl:with-param name=\"\" select=\"\"></xsl:with-param>\n</xsl:apply-templates>\n",
         },
       ],
     },
@@ -773,6 +801,88 @@ finish
         {
           'query': "div.{{foo}}",
           'result': "<div class=\"{{foo}}\"></div>\n",
+        },
+      ],
+    },
+  ],
+},
+{
+  'type': 'sass',
+  'categories': [
+    {
+      'name': 'expand abbreviation',
+      'tests': [
+        {
+          'query': "@i",
+          'result': "@import url()",
+        },
+        {
+          'query': "fs:n",
+          'result': "font-style:normal",
+        },
+        {
+          'query': "fl:l|fc",
+          'result': "float: left",
+        },
+        {
+          'query': "bg+$$$$",
+          'result': "background:#FFF url($$$$) 0 0 no-repeat",
+        },
+        {
+          'query': "bg+!$$$$",
+          'result': "background:#FFF url($$$$) 0 0 no-repeat !important",
+        },
+        {
+          'query': "m$$$$",
+          'result': "margin:$$$$",
+        },
+        {
+          'query': "m0.1p$$$$",
+          'result': "margin:0.1%",
+        },
+        {
+          'query': "m1.0$$$$",
+          'result': "margin:1.0em",
+        },
+        {
+          'query': "m2$$$$",
+          'result': "margin:2px",
+        },
+        {
+          'query': "bdrs10$$$$",
+          'result': "border-radius:10px",
+        },
+        {
+          'query': "-bdrs20$$$$",
+          'result': "-webkit-border-radius:20px\n-moz-border-radius:20px\nborder-radius:20px",
+        },
+        {
+          'query': "lg(top,#fff,#000)$$$$",
+          'result': "background-image:-webkit-gradient(top, 0 0, 0 100, from(#fff), to(#000))\nbackground-image:-webkit-linear-gradient(#fff, #000)\nbackground-image:-moz-linear-gradient(#fff, #000)\nbackground-image:-o-linear-gradient(#fff, #000)\nbackground-image:linear-gradient(#fff, #000)\n",
+        },
+        {
+          'query': "m10-5-0$$$$",
+          'result': "margin:10px 5px 0px",
+        },
+        {
+          'query': "m-10--5$$$$",
+          'result': "margin:-10px -5px",
+        },
+        {
+          'query': "m10-auto$$$$",
+          'result': "margin:10px auto",
+        },
+        {
+          'query': "w100p$$$$",
+          'result': "width:100%",
+        },
+        {
+          'query': "h50e$$$$",
+          'result': "height:50em",
+        },
+        {
+          'query': "(bg+)+c$$$$",
+          'result': "background:#FFF url($$$$) 0 0 no-repeat\ncolor:#000",
         },
       ],
     },

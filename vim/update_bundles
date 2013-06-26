@@ -3,7 +3,6 @@
 git_bundles = %w[ 
   git://github.com/astashov/vim-ruby-debugger.git
   git://github.com/derekwyatt/vim-scala
-  git://github.com/msanders/snipmate.vim.git
   git://github.com/scrooloose/nerdtree.git
   git://github.com/timcharper/textile.vim.git
   git://github.com/tpope/vim-cucumber.git
@@ -27,7 +26,6 @@ git_bundles = %w[
   git://github.com/mattn/zencoding-vim.git
   git://github.com/juvenn/mustache.vim.git
   git://github.com/uggedal/go-vim.git
-  git://github.com/rcyrus/snipmate-snippets-rubymotion
 ]
 
 vim_org_scripts = [
