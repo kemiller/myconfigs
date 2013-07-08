@@ -18,7 +18,6 @@ git_bundles = %w[
   git://github.com/tsaleh/vim-align.git
   git://github.com/tsaleh/vim-matchit.git
   git://github.com/tsaleh/vim-shoulda.git
-  git://github.com/tsaleh/vim-supertab.git
   git://github.com/tsaleh/vim-tcomment.git
   git://github.com/twerth/ir_black.git
   git://github.com/vim-ruby/vim-ruby.git
@@ -26,6 +25,7 @@ git_bundles = %w[
   git://github.com/mattn/zencoding-vim.git
   git://github.com/juvenn/mustache.vim.git
   git://github.com/uggedal/go-vim.git
+  git://github.com/Valloric/YouCompleteMe
 ]
 
 vim_org_scripts = [
@@ -61,3 +61,4 @@ vim_org_scripts.each do |name, script_id, script_type|
 end
 
 system "cd Command-T && PATH=/usr/bin rake make"
+system "cd YouCompleteMe && PATH=/usr/bin ./install.sh --clang-completer"
