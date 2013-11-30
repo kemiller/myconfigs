@@ -1,0 +1,33 @@
+set nocursorline " don't highlight current line
+
+set guifont=Consolas:h16
+set hlsearch
+set clipboard=
+
+" keyboard shortcuts
+" inoremap jj <ESC>
+
+" toggle search term highlighting -- handy when you want it,
+" irritating and distracting when you don't.
+nmap <D-u> :nohls<CR>
+
+nmap <D-d> :NERDTreeToggle<CR>
+
+nmap <silent> <leader>d <Plug>DashGlobalSearch
+
+" Command-T bindings
+map <leader>t :tabnew<CR>:CommandT<CR>
+map <leader>e :CommandT<CR>
+
+" gui settings
+if (&t_Co == 256 || has('gui_running'))
+  if ($TERM_PROGRAM == 'iTerm.app')
+    colorscheme ir_white
+  else
+    colorscheme desert
+  endif
+endif
+
+let g:syntastic_ruby_macruby_exe='/Library/RubyMotion/bin/ruby'
+
+colorscheme ir_white

@@ -26,10 +26,10 @@ alias rgrep="grep -r --include='*.rb'"
 alias rack="ack --ruby"
 
 function gd () {
-  pushd $RUBYROOT/gems/1.8/gems/$1
+  pushd `bundle show $1`
 }
 
-complete -W '`\ls -1 $RUBYROOT/gems/1.8/gems`' gd
+complete -W '`bundle list | tail +1 | cut -d" " -f4`' gd
 complete -C "rsr testlist" ts
 complete -C ~/bin/rake_bash_complete -o default rake
 

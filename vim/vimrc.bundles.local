@@ -1,0 +1,4 @@
+Bundle 'juvenn/mustache'
+Bundle 'rizzatti/dash.vim'
+Bundle 'rizzatti/funcoo.vim'
+Bundle 'kemiller/vim-ir-white'
