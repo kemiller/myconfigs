@@ -16,8 +16,8 @@ nmap <D-d> :NERDTreeToggle<CR>
 nmap <silent> <leader>d <Plug>DashGlobalSearch
 
 " Command-T bindings
-map <leader>t :tabnew<CR>:CommandT<CR>
-map <leader>e :CommandT<CR>
+map <leader>t :tabnew<CR>:CtrlP<CR>
+map <leader>e :CtrlP<CR>
 
 " gui settings
 if (&t_Co == 256 || has('gui_running'))
@@ -29,5 +29,7 @@ if (&t_Co == 256 || has('gui_running'))
 endif
 
 let g:syntastic_ruby_macruby_exe='/Library/RubyMotion/bin/ruby'
+let g:syntastic_ruby_checkers=['macruby']
+set wildignore+=build/**
 
 colorscheme ir_white
