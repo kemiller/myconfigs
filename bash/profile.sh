@@ -36,7 +36,7 @@ if [[ -f ~/.local-profile ]]; then
 fi
 
 # make sure this is always first
-PATH="$HOME/bin:$PATH"
+PATH="$HOME/bin:$HOME/.config/bin:$PATH"
 
 # Automatic bash completion for MacPorts
 if [[ -f /opt/local/etc/bash_completion ]]; then
