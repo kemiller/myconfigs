@@ -7,7 +7,7 @@ ln -snFi $(pwd)/vim/vimrc.local ~/.vimrc.local
 ln -snFi $(pwd)/bin ~/bin
 ln -snFi $(pwd)/gitconfig ~/.gitconfig
 mkdir -p ~/.bak
-git submodule update
+git submodule update --init
 (cd maximum-awesome && rake)
 
 
