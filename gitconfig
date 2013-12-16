@@ -35,11 +35,11 @@
 	name = Ken Miller
 	email = ken@bitfield.net
 [core]
-	excludesfile = $HOME/.gitignore_global
+	excludesfile = /Users/ken/.gitignore_global
   pager = cut -c 1-`tput cols` | less
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 	path = 
 [mergetool "sourcetree"]
-	cmd = /Users/ken/Library/Application Support/SourceTree/SourceTree 1.7.3/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true

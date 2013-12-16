@@ -31,5 +31,5 @@ function gd () {
 
 complete -W '`bundle list | tail +1 | cut -d" " -f4`' gd
 complete -C "rsr testlist" ts
-complete -C ~/bin/rake_bash_complete -o default rake
+complete -C ~/.config/bin/rake_bash_complete -o default rake
 
