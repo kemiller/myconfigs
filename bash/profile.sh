@@ -43,6 +43,11 @@ if [[ -f /opt/local/etc/bash_completion ]]; then
 	. /opt/local/etc/bash_completion
 fi
 
+# Automatic bash completion for Homebrew
+if [ -f $(brew --prefix)/etc/bash_completion ]; then
+  . $(brew --prefix)/etc/bash_completion
+fi
+
 if [[ `type -t __git_ps1` != 'function' ]]; then
 	. $BASH_CONFIG_DIR/git-completion.bash
 fi

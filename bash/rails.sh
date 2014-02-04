@@ -24,6 +24,7 @@ alias rls='pushd $(rsr path); rsr bundle rails'
 alias ts="rsr test"
 alias rgrep="grep -r --include='*.rb'"
 alias rack="ack --ruby"
+alias be="bundle exec"
 
 function gd () {
   pushd `bundle show $1`

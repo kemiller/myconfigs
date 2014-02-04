@@ -18,6 +18,7 @@ nmap <silent> <leader>d <Plug>DashGlobalSearch
 " Command-T bindings
 map <leader>t :tabnew<CR>:CtrlP<CR>
 map <leader>e :CtrlP<CR>
+map <leader>b :CtrlPBuffer<CR>
 
 " gui settings
 if (&t_Co == 256 || has('gui_running'))
