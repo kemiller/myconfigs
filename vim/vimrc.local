@@ -17,6 +17,7 @@ nmap <silent> <leader>d <Plug>DashGlobalSearch
 
 " Command-T bindings
 map <leader>t :tabnew<CR>:CtrlP<CR>
+map <D-t>     :tabnew<CR>:CtrlP<CR>
 map <leader>e :CtrlP<CR>
 map <leader>b :CtrlPBuffer<CR>
 
@@ -31,6 +32,11 @@ endif
 
 let g:syntastic_ruby_macruby_exe='/Library/RubyMotion/bin/ruby'
 let g:syntastic_ruby_checkers=['macruby']
+let g:ctrlp_working_path_mode = 'rc'
 set wildignore+=build/**
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v[\/](\.(git|hg|svn)|tmp|coverage)$',
+  \ 'file': '\v\.(swp|swo)$',
+  \ }
 
 colorscheme ir_white

@@ -3,6 +3,7 @@
 DIR_ABBREVS="a: ac:app/controllers am:app/models aa:app/admin ah:app/helpers"
 DIR_ABBREVS="$DIR_ABBREVS tf:test/functional tu:test/unit ti:test/integration"
 DIR_ABBREVS="$DIR_ABBREVS db:db mg:db/migrate tc:test/factories lb:lib av:app/views"
+DIR_ABBREVS="$DIR_ABBREVS sm:spec/models sf:spec/features"
 DIR_ABBREVS="$DIR_ABBREVS aw:app/workers a:."
 
 SCRIPT_ABBREVS="ss:server cn:console dbc:dbconsole gen:generate"
