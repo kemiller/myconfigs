@@ -3,6 +3,8 @@ set nocursorline " don't highlight current line
 set guifont=Consolas:h16
 set hlsearch
 set clipboard=
+set autochdir
+set statusline=%<%f\ %h%m%r%y%=%-14.(%l,%c%V%)\ %P
 
 " keyboard shortcuts
 " inoremap jj <ESC>
