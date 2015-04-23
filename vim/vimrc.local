@@ -42,3 +42,5 @@ let g:ctrlp_custom_ignore = {
   \ }
 
 colorscheme ir_white
+
+set guifont=Consolas:h15
