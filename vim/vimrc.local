@@ -32,6 +32,8 @@ if (&t_Co == 256 || has('gui_running'))
   endif
 endif
 
+" AddTabularPattern factory_girl /^[[:lower:][:digit:]_ ]\{-}\zs\>\ 
+
 let g:syntastic_ruby_macruby_exe='/Library/RubyMotion/bin/ruby'
 let g:syntastic_ruby_checkers=['macruby']
 let g:ctrlp_working_path_mode = 'rc'

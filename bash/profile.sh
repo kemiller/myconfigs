@@ -105,3 +105,6 @@ if [[ -d $HOME/.ec2 ]] ; then source $HOME/.ec2/vars; fi
 if [[ -s $HOME/.rvm/scripts/rvm ]] ; then source $HOME/.rvm/scripts/rvm ; fi
 
 [[ -s /Users/ken/.nvm/nvm.sh ]] && . /Users/ken/.nvm/nvm.sh # This loads NVM
+
+### Added by the Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"
