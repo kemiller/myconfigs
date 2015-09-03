@@ -1,6 +1,6 @@
 set nocursorline " don't highlight current line
 
-set guifont=Consolas:h16
+set guifont=Hack:h15
 set hlsearch
 set clipboard=
 set autochdir
@@ -44,5 +44,3 @@ let g:ctrlp_custom_ignore = {
   \ }
 
 colorscheme ir_white
-
-set guifont=Consolas:h15
