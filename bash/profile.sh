@@ -56,6 +56,8 @@ complete -o bashdefault -o default -o nospace -F _git g
 
 . $BASH_CONFIG_DIR/rails.sh
 
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+
 ##
 ## Prompt
 ##
